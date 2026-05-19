@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Colorado Tech People | Stories Shaping Colorado Tech</title>
-  <meta name="description" content="Colorado Tech People is a podcast featuring founders, operators, builders, and innovators shaping Colorado’s tech ecosystem." />
+  <title>Colorado Tech People | Podcast About Colorado Tech Builders</title>
+  <meta name="description" content="Colorado Tech People is a podcast featuring founders, operators, builders, and innovators shaping Colorado’s tech ecosystem from Denver to the Western Slope." />
 
   <meta property="og:title" content="Colorado Tech People" />
-  <meta property="og:description" content="Stories, insights, and voices shaping Colorado tech." />
+  <meta property="og:description" content="Podcast conversations with founders, operators, builders, and innovators shaping Colorado tech." />
   <meta property="og:type" content="website" />
 
   <link rel="stylesheet" href="styles.css" />
@@ -17,44 +17,53 @@
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a href="index.html" class="brand">
+      <a href="index.html" class="brand" aria-label="Colorado Tech People home">
         <img src="assets/logo.png" alt="Colorado Tech People logo" class="logo" />
       </a>
 
-      <nav class="nav-links">
+      <nav class="nav-links" aria-label="Primary navigation">
         <a href="episodes.html">Episodes</a>
         <a href="about.html">About</a>
-        <a href="contact.html">Community</a>
-        <a href="contact.html">Subscribe</a>
+        <a href="#community">Community</a>
+        <a href="#subscribe">Subscribe</a>
       </nav>
 
-      <a class="subscribe-pill" href="contact.html">✉ Subscribe</a>
+      <a class="subscribe-pill" href="#subscribe">Subscribe</a>
     </div>
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero" aria-labelledby="hero-title">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <h1>Stories, insights, and voices shaping <span>Colorado tech.</span></h1>
+          <p class="eyebrow">A Colorado tech podcast</p>
+          <h1 id="hero-title">Stories, insights, and voices shaping <span>Colorado tech.</span></h1>
           <p>
             Conversations with founders, operators, builders, and innovators across Colorado —
             sharing real stories, lessons learned, and the future we’re building together.
           </p>
 
           <div class="hero-actions">
-            <a class="btn primary" href="episodes.html">▶ Listen Now</a>
+            <a class="btn primary" href="episodes/marvin-lim-kitchen-table.html">▶ Listen Now</a>
             <a class="btn secondary" href="episodes.html">Browse Episodes</a>
           </div>
         </div>
 
+<<<<<<< codex/update-homepage-design-to-match-mockup
+        <div class="hero-visual" aria-label="Colorado mountains, technology lines, and podcast microphone artwork">
+          <img src="assets/hero-denver.png" alt="Blue Colorado mountain and podcast microphone artwork" class="hero-image" />
+          <div class="hero-logo-card">
+            <img src="assets/logo.png" alt="Colorado Tech People logo" />
+          </div>
+=======
         <div class="hero-visual">
           <img src="assets/home-hero.png" alt="Colorado Tech People hero artwork" class="hero-image" />
+>>>>>>> main
         </div>
       </div>
     </section>
 
-    <section class="featured-section">
+    <section class="featured-section" aria-labelledby="featured-title">
       <div class="container">
         <article class="featured-card">
           <div class="episode-art">
@@ -64,42 +73,42 @@
           <div class="featured-content">
             <div class="episode-meta">
               <span>Featured Episode</span>
-              <span>Season 4 · Episode 7</span>
+              <span>Marketplace Strategy</span>
             </div>
 
-            <h2>Scaling with Soul: Building JetFuel from Day One</h2>
+            <h2 id="featured-title">Building a Marketplace Means Building Two Businesses at Once</h2>
 
             <p class="guest-line">
-              <strong>Evan Frank</strong> · Co-founder & CEO, JetFuel
+              <strong>Marvin Lim</strong> · The Kitchen Table
             </p>
 
             <p>
-              Evan shares how JetFuel went from a garage idea to a category leader —
-              and why culture, clarity, and community are non-negotiable.
+              A conversation about private chef dining, customer discovery, hospitality,
+              and the founder lesson that every marketplace has to serve both supply and demand.
             </p>
 
-            <div class="audio-row">
-              <button class="play-button">▶</button>
-              <div class="audio-bar">
-                <span></span>
-              </div>
-              <span class="time">48:37</span>
+            <div class="featured-actions">
+              <a class="btn primary" href="episodes/marvin-lim-kitchen-table.html">Read Episode Notes</a>
+              <a class="btn ghost" href="episodes.html">More Episodes</a>
             </div>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" aria-labelledby="recent-title">
       <div class="container section-heading-row">
-        <h2>Recent Episodes</h2>
+        <div>
+          <p class="eyebrow">Listen and learn</p>
+          <h2 id="recent-title">Recent Episodes</h2>
+        </div>
         <a href="episodes.html">View all episodes →</a>
       </div>
 
       <div class="container episode-grid">
         <a class="episode-card" href="episodes/marvin-lim-kitchen-table.html">
           <div class="thumb thumb-one">
-            <span class="badge">S4 E6</span>
+            <span class="badge">Episode 6</span>
             <span class="play-small">▶</span>
           </div>
           <div class="episode-body">
@@ -110,55 +119,55 @@
           </div>
         </a>
 
-        <a class="episode-card" href="episodes/justin-ging-atom-computing.html">
+        <a class="episode-card" href="episodes.html#upcoming-episodes">
           <div class="thumb thumb-two">
-            <span class="badge">S4 E5</span>
+            <span class="badge">Deep Tech</span>
             <span class="play-small">▶</span>
           </div>
           <div class="episode-body">
-            <p class="date">Apr 30, 2024</p>
-            <h3>What Changed in Quantum?</h3>
-            <p class="guest">Justin Ging · Atom Computing</p>
-            <p>Why quantum may finally be moving from promise to real momentum.</p>
+            <p class="date">Coming soon</p>
+            <h3>Colorado’s Next Wave of Deep Tech Builders</h3>
+            <p class="guest">Founders · Researchers · Operators</p>
+            <p>Quantum, aerospace, climate, and infrastructure ideas moving from lab to market.</p>
           </div>
         </a>
 
-        <a class="episode-card" href="episodes/kathy-long-nixit.html">
+        <a class="episode-card" href="episodes.html#upcoming-episodes">
           <div class="thumb thumb-three">
-            <span class="badge">S4 E4</span>
+            <span class="badge">AI + Product</span>
             <span class="play-small">▶</span>
           </div>
           <div class="episode-body">
-            <p class="date">Apr 23, 2024</p>
-            <h3>Building Responsible AI for Neurodiversity Support</h3>
-            <p class="guest">Kathy Long · Nixit</p>
-            <p>Inclusive AI, consent, product design, and human-centered technology.</p>
+            <p class="date">Coming soon</p>
+            <h3>Building Responsible AI Products with Colorado Teams</h3>
+            <p class="guest">Product leaders · Engineers</p>
+            <p>Practical conversations about trust, design, data, and customer outcomes.</p>
           </div>
         </a>
 
-        <a class="episode-card" href="episodes/joe-castagneri-amp.html">
+        <a class="episode-card" href="episodes.html#upcoming-episodes">
           <div class="thumb thumb-four">
-            <span class="badge">S4 E3</span>
+            <span class="badge">Community</span>
             <span class="play-small">▶</span>
           </div>
           <div class="episode-body">
-            <p class="date">Apr 16, 2024</p>
-            <h3>When AI and Robotics Make Recovery Scalable</h3>
-            <p class="guest">Joe Castagneri · AMP</p>
-            <p>How technology is changing the economics of recycling and recovery.</p>
+            <p class="date">Coming soon</p>
+            <h3>How Colorado Communities Help Startups Grow</h3>
+            <p class="guest">Mentors · Investors · Ecosystem builders</p>
+            <p>What makes the Front Range and beyond a collaborative place to build.</p>
           </div>
         </a>
       </div>
     </section>
 
-    <section class="section about-band">
+    <section class="section about-band" aria-labelledby="about-title">
       <div class="container split-grid">
         <div class="info-card light">
-          <h2>About the Podcast</h2>
+          <p class="eyebrow">About the show</p>
+          <h2 id="about-title">A podcast for the people behind the progress.</h2>
           <p>
-            Colorado Tech People is a show about the people behind the progress.
-            We go beyond press releases to uncover the stories, struggles, decisions,
-            and wins that shape Colorado’s tech community.
+            Colorado Tech People goes beyond press releases to uncover the stories,
+            tradeoffs, decisions, and wins that shape the state’s technology community.
           </p>
 
           <div class="icon-row">
@@ -175,49 +184,52 @@
             <div>
               <div class="icon-circle">🏔</div>
               <h4>Real Colorado</h4>
-              <p>Proudly spotlighting the innovation happening across our state.</p>
+              <p>Proudly spotlighting innovation happening across our state.</p>
             </div>
           </div>
 
           <a class="btn secondary" href="about.html">Learn More About the Show</a>
         </div>
 
-        <div class="info-card dark-card">
-          <h2>Rooted in Colorado. Connected Everywhere.</h2>
+        <div class="info-card dark-card" id="community">
+          <p class="eyebrow on-dark">Colorado ecosystem</p>
+          <h2>Rooted in Colorado. Connected everywhere.</h2>
           <p>
-            From the Front Range to the Western Slope, we amplify the people and
-            organizations making Colorado a great place to build.
+            From Denver and Boulder to Colorado Springs, Fort Collins, Grand Junction,
+            and mountain communities, the show amplifies the people making Colorado a
+            great place to build.
           </p>
 
           <div class="stats">
             <div>
               <strong>100+</strong>
-              <span>Conversations</span>
+              <span>Stories to tell</span>
             </div>
             <div>
-              <strong>60+</strong>
-              <span>Colorado Cities Represented</span>
+              <strong>6</strong>
+              <span>Colorado regions in focus</span>
             </div>
             <div>
               <strong>1</strong>
-              <span>Stronger Tech Community</span>
+              <span>Stronger tech community</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="newsletter-section">
+    <section class="newsletter-section" id="subscribe" aria-labelledby="subscribe-title">
       <div class="container newsletter-card">
         <div>
-          <h2>Never Miss an Episode</h2>
-          <p>Get new episodes, show notes, and Colorado tech stories delivered to your inbox.</p>
+          <p class="eyebrow">Stay connected</p>
+          <h2 id="subscribe-title">Never miss an episode.</h2>
+          <p>Get new episode notes, guest announcements, and Colorado tech stories when they are ready.</p>
         </div>
 
-        <form>
-          <input type="email" placeholder="Enter your email address" />
-          <button type="submit">Subscribe</button>
-        </form>
+        <div class="newsletter-actions" aria-label="Subscription links">
+          <a class="btn primary" href="contact.html">Get Updates</a>
+          <a class="btn secondary" href="contact.html">Suggest a Guest</a>
+        </div>
       </div>
     </section>
   </main>
@@ -233,13 +245,13 @@
         <h4>Explore</h4>
         <a href="episodes.html">Episodes</a>
         <a href="about.html">About</a>
-        <a href="contact.html">Community</a>
-        <a href="contact.html">Newsletter</a>
+        <a href="#community">Community</a>
+        <a href="#subscribe">Newsletter</a>
       </div>
 
       <div>
         <h4>Connect</h4>
-        <a href="contact.html">Work With Us</a>
+        <a href="contact.html">Suggest a Guest</a>
         <a href="contact.html">Sponsor the Show</a>
         <a href="contact.html">Guest Inquiries</a>
         <a href="contact.html">Contact</a>
@@ -247,15 +259,15 @@
 
       <div>
         <h4>Listen On</h4>
-        <a href="#">Apple Podcasts</a>
-        <a href="#">Spotify</a>
-        <a href="#">YouTube</a>
-        <a href="#">RSS Feed</a>
+        <a href="episodes.html">Episode Archive</a>
+        <a href="episodes/marvin-lim-kitchen-table.html">Featured Episode</a>
+        <a href="contact.html">Apple Podcasts</a>
+        <a href="contact.html">Spotify</a>
       </div>
     </div>
 
     <div class="container copyright">
-      © 2024 Colorado Tech People. All rights reserved.
+      © 2026 Colorado Tech People. All rights reserved.
     </div>
   </footer>
 </body>
