@@ -1,0 +1,19 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  // Phase 1 scaffold: no CMS-backed episodes yet.
+  return [];
+}
+
+const { slug } = Astro.params;
+---
+
+<BaseLayout title="Episode Detail | Colorado Tech People">
+  <section class="site-shell">
+    <h1>Episode Page (Placeholder)</h1>
+    <p>
+      Temporary Phase 1 dynamic route scaffold for episode slug: <code>{slug}</code>
+    </p>
+  </section>
+</BaseLayout>
