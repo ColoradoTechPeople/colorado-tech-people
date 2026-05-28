@@ -1,0 +1,30 @@
+---
+import Container from "@components/Container.astro";
+import Wordmark from "@components/Wordmark.astro";
+
+const navLinks = [
+  { href: "/episodes", label: "Episodes" },
+  { href: "/about", label: "About" },
+  { href: "/suggest-a-guest", label: "Suggest a Guest" },
+  { href: "/sponsor-the-show", label: "Sponsor the Show" },
+  { href: "/contact", label: "Contact" },
+];
+---
+
+<header class="site-header">
+  <Container as="div" class="site-header__inner">
+    <Wordmark />
+
+    <nav aria-label="Primary">
+      <ul class="site-nav">
+        {
+          navLinks.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </Container>
+</header>

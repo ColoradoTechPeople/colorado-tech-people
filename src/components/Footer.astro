@@ -1,0 +1,17 @@
+---
+import Container from "@components/Container.astro";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <Container as="div" class="site-footer__inner">
+    <p>&copy; {year} Colorado Tech People</p>
+    <nav aria-label="Footer">
+      <ul class="site-footer__links">
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/thank-you">Thank You</a></li>
+      </ul>
+    </nav>
+  </Container>
+</footer>

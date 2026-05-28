@@ -1,0 +1,38 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+}
+
+const DEFAULT_TITLE = "Colorado Tech People";
+const DEFAULT_DESCRIPTION =
+  "Colorado Tech People is an editorial podcast spotlighting the builders, operators, and ideas shaping Colorado tech.";
+const DEFAULT_OG_IMAGE = "/assets/logo.png";
+
+const siteUrlEnv = import.meta.env.PUBLIC_SITE_URL;
+const fallbackSiteUrl = "http://localhost:4321";
+const siteUrl = siteUrlEnv ? new URL(siteUrlEnv).origin : fallbackSiteUrl;
+
+const {
+  title = DEFAULT_TITLE,
+  description = DEFAULT_DESCRIPTION,
+  canonicalUrl,
+  ogImage,
+} = Astro.props;
+
+const resolvedCanonicalUrl = canonicalUrl
+  ? new URL(canonicalUrl, siteUrl).toString()
+  : undefined;
+const resolvedOgImage = new URL(ogImage ?? DEFAULT_OG_IMAGE, siteUrl).toString();
+---
+
+<meta name="description" content={description} />
+{resolvedCanonicalUrl && <link rel="canonical" href={resolvedCanonicalUrl} />}
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={resolvedOgImage} />
+{resolvedCanonicalUrl && <meta property="og:url" content={resolvedCanonicalUrl} />}
