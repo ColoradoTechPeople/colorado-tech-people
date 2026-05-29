@@ -7,13 +7,20 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "studio:dev": "node scripts/run-sanity.mjs dev",
+    "studio:build": "node scripts/run-sanity.mjs build",
+    "studio:deploy": "node scripts/run-sanity.mjs deploy"
   },
   "dependencies": {
     "@sanity/client": "^7.22.1",
-    "astro": "^5.10.0"
+    "astro": "^5.10.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "styled-components": "^6.4.2"
   },
   "devDependencies": {
+    "sanity": "^4.11.0",
     "typescript": "^5.8.0"
   }
 }
