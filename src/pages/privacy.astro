@@ -1,10 +1,56 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import Container from "@components/Container.astro";
+
+const pageTitle = "Privacy | Colorado Tech People";
+const pageDescription =
+  "Privacy information for Colorado Tech People, including how inquiry and newsletter information may be used.";
 ---
 
-<BaseLayout title="Privacy | Colorado Tech People">
-  <section class="site-shell">
-    <h1>Privacy (Placeholder)</h1>
-    <p>Temporary Phase 1 scaffold for the future privacy policy page.</p>
-  </section>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <Container as="section" class="privacy-section">
+    <div class="page-intro page-intro--narrow">
+      <p class="eyebrow">Privacy</p>
+      <h1>Privacy</h1>
+      <p>
+        This page gives a plain-language overview of how Colorado Tech People may handle information submitted through
+        the public website. It is intentionally lightweight for the MVP and can be replaced with final legal copy later.
+      </p>
+    </div>
+
+    <div class="privacy-grid">
+      <article class="privacy-card">
+        <h2>Information You Share</h2>
+        <p>
+          In future phases, this website may collect information you choose to submit through guest inquiry, sponsor
+          inquiry, contact, and newsletter signup forms. That information may include details such as your name, email
+          address, organization, role, topic ideas, partnership interests, and message content.
+        </p>
+      </article>
+
+      <article class="privacy-card">
+        <h2>How Information May Be Used</h2>
+        <p>
+          Submitted information may be used to review requests, respond to inquiries, evaluate potential guests or
+          sponsors, and communicate about the show. The site is not intended for sensitive personal information.
+        </p>
+      </article>
+
+      <article class="privacy-card">
+        <h2>Newsletter Updates</h2>
+        <p>
+          If newsletter signup is added, unsubscribe handling will be provided through the email process or newsletter
+          provider used at that time. Newsletter details will mature alongside that functionality.
+        </p>
+      </article>
+
+      <article class="privacy-card">
+        <h2>Third-Party Services</h2>
+        <p>
+          The site may link to podcast hosting, listening platforms, email tools, analytics tools, or other services.
+          Those services may have their own privacy practices and terms.
+        </p>
+      </article>
+    </div>
+  </Container>
 </BaseLayout>

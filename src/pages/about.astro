@@ -1,10 +1,156 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import Container from "@components/Container.astro";
+import { sanityClient } from "@lib/sanity/client";
+import { siteSettingsQuery } from "@lib/sanity/queries";
+
+interface SiteSettings {
+  podcastName?: string;
+  positioningStatement?: string;
+}
+
+const fallbackPodcastName = "Colorado Tech People";
+const fallbackPositioningStatement =
+  "An editorial podcast spotlighting the people, companies, and ideas shaping the Colorado tech ecosystem.";
+
+let siteSettings: SiteSettings | null = null;
+
+if (sanityClient) {
+  try {
+    siteSettings = await sanityClient.fetch<SiteSettings>(siteSettingsQuery);
+  } catch {
+    siteSettings = null;
+  }
+}
+
+const podcastName = siteSettings?.podcastName?.trim() || fallbackPodcastName;
+const positioningStatement = siteSettings?.positioningStatement?.trim() || fallbackPositioningStatement;
+const pageTitle = `About ${podcastName} | Colorado Tech People`;
+const pageDescription =
+  "Learn about the mission, audience, editorial point of view, and Colorado technology ecosystem lens behind Colorado Tech People.";
 ---
 
-<BaseLayout title="About | Colorado Tech People">
-  <section class="site-shell">
-    <h1>About (Placeholder)</h1>
-    <p>Temporary Phase 1 scaffold for future show background and mission content.</p>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <section class="page-hero about-hero">
+    <Container as="div" class="home-hero__inner">
+      <div class="page-intro">
+        <p class="eyebrow">About The Show</p>
+        <h1>A clear, human record of Colorado tech in motion.</h1>
+        <p>{positioningStatement}</p>
+        <p>
+          {podcastName} is built for people who want more than headlines. We sit with founders, operators, engineers,
+          investors, community builders, and emerging leaders to understand what they are building, what they have
+          learned, and how Colorado shapes the work.
+        </p>
+        <div class="home-hero__actions">
+          <a class="button-link button-link--primary" href="/episodes">Listen To Episodes</a>
+          <a class="button-link button-link--secondary" href="/suggest-a-guest">Suggest a guest</a>
+        </div>
+      </div>
+
+      <div class="home-hero__art" aria-hidden="true">
+        <div class="home-hero__art-inner">
+          <p class="home-hero__art-label">Colorado Lens</p>
+          <h2 class="home-hero__art-title">Local context. Practical lessons. Generous curiosity.</h2>
+        </div>
+      </div>
+    </Container>
   </section>
+
+  <Container as="section" class="about-mission" aria-labelledby="about-mission-heading">
+    <div class="about-mission__grid">
+      <div class="about-mission__copy">
+        <p class="home-kicker">Mission</p>
+        <h2 id="about-mission-heading">Make Colorado’s technology community easier to understand and easier to join.</h2>
+      </div>
+      <div class="about-mission__body">
+        <p>
+          The show creates thoughtful, accessible conversations with the people building across Colorado: the decisions
+          behind the product, the company, the career pivot, the fund, the community program, and the hard-won lesson.
+        </p>
+        <p>
+          Each episode is designed to be useful before someone presses play and worth returning to after they listen.
+          The website complements the podcast with readable summaries, show notes, links, and transcripts when
+          available.
+        </p>
+      </div>
+    </div>
+  </Container>
+
+  <Container as="section" class="about-values" aria-labelledby="about-audience-heading">
+    <div class="home-section-heading">
+      <div>
+        <p class="home-kicker">Audience</p>
+        <h2 id="about-audience-heading">For people building, hiring, investing, learning, and connecting here.</h2>
+      </div>
+    </div>
+    <div class="about-values__grid">
+      <article class="info-card">
+        <p class="home-kicker">Builders</p>
+        <h3>Founders and teams</h3>
+        <p>Stories from people turning ideas into durable companies, products, services, and communities.</p>
+      </article>
+      <article class="info-card">
+        <p class="home-kicker">Operators</p>
+        <h3>Leaders and practitioners</h3>
+        <p>Practical context for product, engineering, go-to-market, people, finance, and growth work.</p>
+      </article>
+      <article class="info-card">
+        <p class="home-kicker">Community</p>
+        <h3>Talent and connectors</h3>
+        <p>A welcoming entry point for students, career changers, investors, mentors, and ecosystem partners.</p>
+      </article>
+    </div>
+  </Container>
+
+  <Container as="section" class="about-editorial" aria-labelledby="about-editorial-heading">
+    <div class="about-editorial__grid">
+      <article class="editorial-panel">
+        <p class="home-kicker">Editorial Point Of View</p>
+        <h2 id="about-editorial-heading">Curious, grounded, and allergic to empty hype.</h2>
+        <p>
+          We prioritize real decisions, useful context, and honest reflection. The best episodes feel like a sharp
+          coffee conversation with someone generous enough to explain what actually happened.
+        </p>
+        <ul class="about-list">
+          <li>Readable summaries over vague promotion.</li>
+          <li>Specific lessons over generic startup advice.</li>
+          <li>Human stories over polished talking points.</li>
+        </ul>
+      </article>
+
+      <article class="editorial-panel editorial-panel--dark">
+        <p class="home-kicker">Colorado Technology Ecosystem</p>
+        <h2>Rooted in place, not limited by it.</h2>
+        <p>
+          Colorado tech is not one scene or one city. It includes Front Range startups, enterprise teams, research labs,
+          civic technology, outdoor and climate innovation, rural entrepreneurship, and community groups helping people
+          find their first or next opportunity.
+        </p>
+        <p>
+          The show frames Colorado as a connected ecosystem: local enough to be personal, ambitious enough to matter
+          nationally, and varied enough to keep surprising us.
+        </p>
+      </article>
+    </div>
+  </Container>
+
+  <Container as="section" class="about-cta" aria-labelledby="about-cta-heading">
+    <div class="about-cta__panel">
+      <div>
+        <p class="home-kicker">Get Involved</p>
+        <h2 id="about-cta-heading">Have a story, guest idea, partnership, or question?</h2>
+        <p>
+          Start with the episodes, then tell us who should be part of the conversation next. We’re especially interested
+          in voices with a specific lesson, strong Colorado context, or a useful perspective for the community.
+        </p>
+      </div>
+      <nav class="about-cta__links" aria-label="About page calls to action">
+        <a class="button-link button-link--primary" href="/episodes">Listen To Episodes</a>
+        <a class="button-link button-link--secondary" href="/suggest-a-guest">Suggest A Guest</a>
+        <a class="button-link button-link--secondary" href="/sponsor-the-show">Sponsor The Show</a>
+        <a class="button-link button-link--secondary" href="/contact">Contact Us</a>
+      </nav>
+    </div>
+  </Container>
 </BaseLayout>

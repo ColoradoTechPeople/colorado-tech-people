@@ -1,17 +1,105 @@
 ---
 import Container from "@components/Container.astro";
+import Wordmark from "@components/Wordmark.astro";
+
+interface ExternalLink {
+  label: string;
+  url: string;
+}
+
+interface Props {
+  siteName?: string;
+  positioningStatement?: string;
+  podcastPlatformLinks?: ExternalLink[];
+  socialLinks?: ExternalLink[];
+  currentPath?: string;
+}
+
+const {
+  siteName = "Colorado Tech People",
+  positioningStatement = "Elevating the stories and people building a better future through technology in Colorado.",
+  podcastPlatformLinks = [],
+  socialLinks = [],
+  currentPath = "/",
+} = Astro.props;
 
 const year = new Date().getFullYear();
+
+const footerLinks = [
+  { href: "/", label: "Home" },
+  { href: "/episodes", label: "Episodes" },
+  { href: "/about", label: "About" },
+  { href: "/suggest-a-guest", label: "Suggest a Guest" },
+  { href: "/sponsor-the-show", label: "Sponsor the Show" },
+  { href: "/contact", label: "Contact" },
+  { href: "/privacy", label: "Privacy" },
+];
+
+const isCurrent = (href: string) => {
+  if (href === "/") {
+    return currentPath === "/";
+  }
+
+  return currentPath === href || currentPath.startsWith(`${href}/`);
+};
 ---
 
 <footer class="site-footer">
   <Container as="div" class="site-footer__inner">
-    <p>&copy; {year} Colorado Tech People</p>
-    <nav aria-label="Footer">
-      <ul class="site-footer__links">
-        <li><a href="/privacy">Privacy</a></li>
-        <li><a href="/thank-you">Thank You</a></li>
-      </ul>
-    </nav>
+    <div class="site-footer__brand">
+      <div class="site-header__brand">
+        <Wordmark href="/" label={siteName} />
+      </div>
+      <p class="site-footer__copyright">&copy; {year} {siteName}</p>
+      <p>{positioningStatement}</p>
+    </div>
+
+    <div class="site-footer__groups">
+      <section class="site-footer__group" aria-label="Explore">
+        <h2>Explore</h2>
+        <ul class="site-footer__links site-footer__links--stacked">
+          {footerLinks.slice(0, 4).map((link) => (
+            <li>
+              <a href={link.href} aria-current={isCurrent(link.href) ? "page" : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="site-footer__group" aria-label="Connect">
+        <h2>Connect</h2>
+        <ul class="site-footer__links site-footer__links--stacked">
+          {footerLinks.slice(4).map((link) => (
+            <li>
+              <a href={link.href} aria-current={isCurrent(link.href) ? "page" : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="site-footer__group" aria-label="Listen on">
+        <h2>Listen On</h2>
+        <ul class="site-footer__links site-footer__links--stacked">
+          {podcastPlatformLinks.length > 0 ? (
+            podcastPlatformLinks.map((link) => <li><a href={link.url}>{link.label}</a></li>)
+          ) : (
+            <li><a href="/episodes">Browse published episodes</a></li>
+          )}
+        </ul>
+      </section>
+
+      {socialLinks.length > 0 && (
+        <section class="site-footer__group" aria-label="Social links">
+          <h2>Follow</h2>
+          <ul class="site-footer__links site-footer__links--stacked">
+            {socialLinks.map((link) => <li><a href={link.url}>{link.label}</a></li>)}
+          </ul>
+        </section>
+      )}
+    </div>
   </Container>
 </footer>

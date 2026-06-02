@@ -3,6 +3,22 @@ import "@styles/global.css";
 import SEO from "@components/SEO.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
+import { sanityClient } from "@lib/sanity/client";
+import { siteSettingsQuery } from "@lib/sanity/queries";
+import { cleanString } from "@lib/episodes";
+
+interface ExternalLink {
+  label: string;
+  url: string;
+}
+
+interface SiteSettings {
+  siteName?: string;
+  podcastName?: string;
+  positioningStatement?: string;
+  podcastPlatformLinks?: ExternalLink[];
+  socialLinks?: ExternalLink[];
+}
 
 interface Props {
   title?: string;
@@ -11,12 +27,36 @@ interface Props {
   ogImage?: string;
 }
 
+const fallbackSiteName = "Colorado Tech People";
+const fallbackDescription =
+  "Colorado Tech People is an editorial podcast spotlighting the builders, operators, and ideas shaping Colorado tech.";
+
 const {
-  title = "Colorado Tech People",
-  description = "Colorado Tech People is an editorial podcast spotlighting the builders, operators, and ideas shaping Colorado tech.",
+  title = fallbackSiteName,
+  description = fallbackDescription,
   canonicalUrl,
   ogImage,
 } = Astro.props;
+
+let siteSettings: SiteSettings | null = null;
+
+if (sanityClient) {
+  try {
+    siteSettings = await sanityClient.fetch<SiteSettings>(siteSettingsQuery);
+  } catch {
+    siteSettings = null;
+  }
+}
+
+const siteName = cleanString(siteSettings?.siteName) || fallbackSiteName;
+const positioningStatement = cleanString(siteSettings?.positioningStatement) || fallbackDescription;
+const podcastPlatformLinks = (siteSettings?.podcastPlatformLinks ?? [])
+  .map((link) => ({ label: cleanString(link?.label), url: cleanString(link?.url) }))
+  .filter((link) => link.label && link.url);
+const socialLinks = (siteSettings?.socialLinks ?? [])
+  .map((link) => ({ label: cleanString(link?.label), url: cleanString(link?.url) }))
+  .filter((link) => link.label && link.url);
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -35,12 +75,18 @@ const {
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
 
-    <Header />
+    <Header siteName={siteName} currentPath={currentPath} />
 
     <main id="main-content">
       <slot />
     </main>
 
-    <Footer />
+    <Footer
+      siteName={siteName}
+      positioningStatement={positioningStatement}
+      podcastPlatformLinks={podcastPlatformLinks}
+      socialLinks={socialLinks}
+      currentPath={currentPath}
+    />
   </body>
 </html>

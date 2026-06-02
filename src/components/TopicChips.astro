@@ -1,0 +1,20 @@
+---
+import type { TopicTag } from "@lib/episodes";
+import { cleanString } from "@lib/episodes";
+
+interface Props {
+  topics?: TopicTag[] | null;
+}
+
+const rawTopics = Astro.props.topics;
+const topics = Array.isArray(rawTopics) ? rawTopics : [];
+const safeTopics = topics
+  .map((topic) => ({ ...topic, title: cleanString(topic?.title) }))
+  .filter((topic) => topic.title);
+---
+
+{safeTopics.length > 0 && (
+  <ul class="topic-chips" aria-label="Episode topics">
+    {safeTopics.map((topic) => <li>{topic.title}</li>)}
+  </ul>
+)}

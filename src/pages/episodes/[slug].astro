@@ -1,19 +1,166 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import Container from "@components/Container.astro";
+import EpisodeMetadata from "@components/EpisodeMetadata.astro";
+import TopicChips from "@components/TopicChips.astro";
+import EpisodePlayerOrLinks from "@components/EpisodePlayerOrLinks.astro";
+import PortableTextContent from "@components/PortableTextContent.astro";
+import EpisodeCard from "@components/EpisodeCard.astro";
+import { sanityClient } from "@lib/sanity/client";
+import { allPublishedEpisodesQuery, episodeBySlugQuery } from "@lib/sanity/queries";
+import { cleanString, getEpisodeImageAlt, getEpisodeImageUrl, hasPortableText } from "@lib/episodes";
+import type { EpisodeBase } from "@lib/episodes";
 
-export function getStaticPaths() {
-  // Phase 1 scaffold: no CMS-backed episodes yet.
-  return [];
+export async function getStaticPaths() {
+  if (!sanityClient) return [];
+  let episodes: EpisodeBase[] = [];
+
+  try {
+    episodes = await sanityClient.fetch<EpisodeBase[]>(allPublishedEpisodesQuery);
+  } catch {
+    return [];
+  }
+
+  return episodes
+    .filter((episode) => episode.slug)
+    .map((episode) => ({
+      params: { slug: episode.slug as string },
+    }));
 }
 
 const { slug } = Astro.params;
+let episode: EpisodeBase | null = null;
+let relatedEpisodes: EpisodeBase[] = [];
+
+if (sanityClient && slug) {
+  try {
+    episode = await sanityClient.fetch<EpisodeBase | null>(episodeBySlugQuery, { slug });
+    relatedEpisodes = await sanityClient.fetch<EpisodeBase[]>(allPublishedEpisodesQuery);
+  } catch {
+    episode = null;
+    relatedEpisodes = [];
+  }
+}
+
+if (!episode) {
+  return Astro.redirect("/episodes");
+}
+
+const episodeTitle = cleanString(episode.title) || "Untitled Episode";
+const episodeSummary =
+  cleanString(episode.summary) || cleanString(episode.excerpt) || "Episode details and listening options are coming soon.";
+const title = cleanString(episode.seoTitle) || `${episodeTitle} | Colorado Tech People`;
+const description =
+  cleanString(episode.seoDescription) ||
+  cleanString(episode.excerpt) ||
+  cleanString(episode.summary) ||
+  "Published episode details and listening options.";
+const imageUrl = getEpisodeImageUrl(episode);
+const imageAlt = getEpisodeImageAlt(episode);
+const guestName = cleanString(episode.guestName);
+const guestTitle = cleanString(episode.guestTitle);
+const guestCompany = cleanString(episode.guestCompany);
+const hasGuestBio = hasPortableText(episode.guestBio);
+const hasGuestSection = Boolean(guestName || guestTitle || guestCompany || hasGuestBio);
+const guestMeta = [guestTitle, guestCompany].filter(Boolean).join(", ");
+const hasShowNotes = hasPortableText(episode.showNotes);
+const hasTranscript = hasPortableText(episode.transcript);
+const linksMentioned = (episode.linksMentioned || []).filter(
+  (link): link is { label: string; url: string } => Boolean(cleanString(link?.label) && cleanString(link?.url)),
+);
+const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._id).slice(0, 3);
 ---
 
-<BaseLayout title="Episode Detail | Colorado Tech People">
-  <section class="site-shell">
-    <h1>Episode Page (Placeholder)</h1>
-    <p>
-      Temporary Phase 1 dynamic route scaffold for episode slug: <code>{slug}</code>
-    </p>
-  </section>
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalUrl={cleanString(episode.canonicalUrl) || undefined}
+  ogImage={cleanString(episode.ogImage?.asset?.url) || cleanString(episode.episodeImage?.asset?.url) || undefined}
+>
+  <Container as="article" class="episode-detail">
+    <p class="episode-detail__back-link"><a href="/episodes">Back to all episodes</a></p>
+
+    <div class="episode-detail__grid">
+      <div class="episode-detail__main">
+        <p class="eyebrow">Colorado Tech People</p>
+        <EpisodeMetadata publishDate={episode.publishDate} episodeNumber={episode.episodeNumber} guestName={guestName} />
+        <h1>{episodeTitle}</h1>
+        <p class="episode-detail__lede">{episodeSummary}</p>
+        <TopicChips topics={episode.topics} />
+
+        <section class="episode-detail__player-card" aria-labelledby="listen-heading">
+          <h2 id="listen-heading">Listen now</h2>
+          <EpisodePlayerOrLinks episode={episode} />
+        </section>
+
+        {hasShowNotes && (
+          <section class="episode-detail__text-card" aria-labelledby="show-notes-heading">
+            <h2 id="show-notes-heading">Show Notes</h2>
+            <PortableTextContent value={episode.showNotes} />
+          </section>
+        )}
+
+        {linksMentioned.length > 0 && (
+          <section class="episode-detail__text-card" aria-labelledby="links-mentioned-heading">
+            <h2 id="links-mentioned-heading">Links Mentioned</h2>
+            <ul class="episode-detail__links-mentioned">
+              {linksMentioned.map((link) => (
+                <li><a href={cleanString(link.url)} target="_blank" rel="noreferrer">{cleanString(link.label)}</a></li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {hasTranscript && (
+          <section class="episode-detail__text-card" aria-labelledby="transcript-heading">
+            <h2 id="transcript-heading">Transcript</h2>
+            <PortableTextContent value={episode.transcript} />
+          </section>
+        )}
+      </div>
+
+      <aside class="episode-detail__sidebar">
+        <img class="episode-detail__image" src={imageUrl} alt={imageAlt} />
+
+        {hasGuestSection && (
+          <section class="episode-detail__sidebar-card" aria-labelledby="guest-heading">
+            <h2 id="guest-heading">Guest</h2>
+            {(guestName || guestMeta) && (
+              <p class="episode-detail__guest-meta">
+                {guestName && <strong>{guestName}</strong>}
+                {guestName && guestMeta ? ", " : ""}
+                {guestMeta}
+              </p>
+            )}
+            {hasGuestBio && <PortableTextContent value={episode.guestBio} />}
+          </section>
+        )}
+
+        <section class="episode-detail__summary-card" aria-labelledby="episode-summary-heading">
+          <h2 id="episode-summary-heading">Episode Summary</h2>
+          <p>{episodeSummary}</p>
+        </section>
+
+        <section class="episode-detail__sidebar-card" aria-labelledby="subscribe-heading">
+          <h2 id="subscribe-heading">Stay close to the show</h2>
+          <p>Explore the latest published conversations or reach out if you want updates from the team.</p>
+          <a class="button-link button-link--primary" href="/episodes">Browse Episodes</a>
+        </section>
+      </aside>
+    </div>
+
+    {otherEpisodes.length > 0 && (
+      <section class="episode-detail__related" aria-labelledby="related-episodes-heading">
+        <div class="home-section-heading">
+          <div>
+            <p class="home-kicker">Related Episodes</p>
+            <h2 id="related-episodes-heading">Keep listening</h2>
+          </div>
+        </div>
+        <ul class="episode-grid">
+          {otherEpisodes.map((entry) => <li><EpisodeCard episode={entry} /></li>)}
+        </ul>
+      </section>
+    )}
+  </Container>
 </BaseLayout>

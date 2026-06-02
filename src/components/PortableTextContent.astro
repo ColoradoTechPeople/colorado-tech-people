@@ -1,0 +1,33 @@
+---
+import type { PortableTextBlock, PortableTextSpan } from "@lib/episodes";
+import { cleanString } from "@lib/episodes";
+
+interface Props {
+  value?: PortableTextBlock[] | null;
+}
+
+const rawValue = Astro.props.value;
+const value = Array.isArray(rawValue) ? rawValue : [];
+const blocks = value.filter((block) => block?._type === "block");
+
+const renderChildren = (children: PortableTextSpan[] = []) =>
+  children.map((child) => child?.text || "").join("");
+
+const renderableBlocks = blocks
+  .map((block) => ({ ...block, text: cleanString(renderChildren(block.children)) }))
+  .filter((block) => block.text);
+---
+
+{renderableBlocks.length > 0 && (
+  <div class="rich-text">
+    {renderableBlocks.map((block) => {
+      if (block.listItem === "bullet") return <ul><li>{block.text}</li></ul>;
+      if (block.listItem === "number") return <ol><li>{block.text}</li></ol>;
+      if (block.style === "h2") return <h2>{block.text}</h2>;
+      if (block.style === "h3") return <h3>{block.text}</h3>;
+      if (block.style === "blockquote") return <blockquote><p>{block.text}</p></blockquote>;
+
+      return <p>{block.text}</p>;
+    })}
+  </div>
+)}

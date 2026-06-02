@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "check": "astro check",
+    "lint": "eslint .",
     "preview": "astro preview",
     "typecheck": "tsc --noEmit",
     "studio:dev": "node scripts/run-sanity.mjs dev",
@@ -20,6 +22,11 @@
     "styled-components": "^6.4.2"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@typescript-eslint/parser": "^8.60.0",
+    "astro-eslint-parser": "^1.4.0",
+    "eslint": "^10.4.1",
+    "eslint-plugin-astro": "^1.7.0",
     "sanity": "^4.11.0",
     "typescript": "^5.8.0"
   }

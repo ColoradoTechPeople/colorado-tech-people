@@ -1,24 +1,114 @@
 /**
- * Phase 1 scaffolding for public-site Sanity queries.
- *
- * Keep these exports intentionally minimal until Phase 2 schema work is in place.
- */
-
-/**
  * Shared visibility constraint for all public episode queries.
  *
- * This should be composed into future GROQ selectors so only published episodes
- * are exposed on public routes and sitemap output.
+ * Compose this into public GROQ selectors so only published episodes are
+ * exposed on public routes and sitemap output.
  */
 export const PUBLISHED_EPISODE_FILTER = '_type == "episode" && status == "published"';
 
 /**
- * Query placeholders for upcoming phases.
- * Replace with concrete GROQ in Phase 2/3 implementation work.
+ * Public shell site settings used for global header/footer/layout content.
  */
-export const siteSettingsQuery = '';
-export const featuredEpisodeQuery = '';
-export const recentEpisodesQuery = '';
-export const allPublishedEpisodesQuery = '';
-export const episodeBySlugQuery = '';
+export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
+  siteName,
+  podcastName,
+  positioningStatement,
+  podcastPlatformLinks[]{label, url},
+  socialLinks[]{label, url}
+}`;
+
+const episodeListProjection = `{
+  _id,
+  title,
+  "slug": slug.current,
+  publishDate,
+  excerpt,
+  summary,
+  guestName,
+  guestTitle,
+  guestCompany,
+  episodeNumber,
+  topics[]->{
+    _id,
+    title,
+    "slug": slug.current
+  },
+  episodeImage{
+    alt,
+    caption,
+    asset->{
+      url
+    }
+  },
+  riversideEpisodeUrl,
+  applePodcastsUrl,
+  spotifyUrl,
+  youtubeUrl,
+  generalEpisodeUrl
+}`;
+
+export const featuredEpisodeQuery = `*[
+  ${PUBLISHED_EPISODE_FILTER} && defined(slug.current)
+] | order(publishDate desc, _createdAt desc)[0] ${episodeListProjection}`;
+
+export const recentEpisodesQuery = `*[
+  ${PUBLISHED_EPISODE_FILTER} &&
+  defined(slug.current) &&
+  (!defined($excludeId) || _id != $excludeId)
+] | order(publishDate desc, _createdAt desc)[0...6] ${episodeListProjection}`;
+
+export const allPublishedEpisodesQuery = `*[
+  ${PUBLISHED_EPISODE_FILTER} && defined(slug.current)
+] | order(publishDate desc, _createdAt desc) ${episodeListProjection}`;
+
+export const episodeBySlugQuery = `*[
+  ${PUBLISHED_EPISODE_FILTER} && slug.current == $slug
+][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  publishDate,
+  summary,
+  excerpt,
+  guestName,
+  guestTitle,
+  guestCompany,
+  guestBio,
+  episodeNumber,
+  topics[]->{
+    _id,
+    title,
+    "slug": slug.current
+  },
+  episodeImage{
+    alt,
+    caption,
+    asset->{
+      url
+    }
+  },
+  showNotes,
+  linksMentioned[]{
+    label,
+    url
+  },
+  transcript,
+  riversideEpisodeUrl,
+  riversideEmbedUrl,
+  riversideEmbedCode,
+  applePodcastsUrl,
+  spotifyUrl,
+  youtubeUrl,
+  generalEpisodeUrl,
+  seoTitle,
+  seoDescription,
+  canonicalUrl,
+  ogImage{
+    alt,
+    caption,
+    asset->{
+      url
+    }
+  }
+}`;
 export const topicsQuery = '';
