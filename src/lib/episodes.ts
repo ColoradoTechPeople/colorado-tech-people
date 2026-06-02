@@ -80,23 +80,43 @@ export const formatPublishDate = (value?: string) => {
   }).format(parsed);
 };
 
+export const cleanString = (value?: string | null) => value?.trim() || "";
+
+export const hasPortableText = (value?: PortableTextBlock[] | null) => {
+  if (!Array.isArray(value)) return false;
+
+  return value.some((block) => {
+    if (block?._type !== "block") return false;
+    return block.children?.some((child) => Boolean(cleanString(child?.text)));
+  });
+};
+
+export const getEpisodeImageUrl = (episode?: EpisodeBase | null) =>
+  cleanString(episode?.episodeImage?.asset?.url) || FALLBACK_EPISODE_IMAGE;
+
+export const getEpisodeImageAlt = (episode?: EpisodeBase | null) =>
+  cleanString(episode?.episodeImage?.alt) ||
+  (cleanString(episode?.title)
+    ? `Cover image for ${cleanString(episode?.title)}`
+    : "Colorado Tech People episode artwork");
+
 export const getEpisodeListenLinks = (episode?: EpisodeBase | null): EpisodeListenLink[] => {
   if (!episode) return [];
 
   const links: EpisodeListenLink[] = [
-    { label: "Riverside", href: episode.riversideEpisodeUrl || "" },
-    { label: "Apple Podcasts", href: episode.applePodcastsUrl || "" },
-    { label: "Spotify", href: episode.spotifyUrl || "" },
-    { label: "YouTube", href: episode.youtubeUrl || "" },
-    { label: "Episode Link", href: episode.generalEpisodeUrl || "" },
+    { label: "Riverside", href: cleanString(episode.riversideEpisodeUrl) },
+    { label: "Apple Podcasts", href: cleanString(episode.applePodcastsUrl) },
+    { label: "Spotify", href: cleanString(episode.spotifyUrl) },
+    { label: "YouTube", href: cleanString(episode.youtubeUrl) },
+    { label: "Episode Link", href: cleanString(episode.generalEpisodeUrl) },
   ];
 
   return links.filter((link) => Boolean(link.href));
 };
 
 export const getPrimaryListenUrl = (episode?: EpisodeBase | null) =>
-  episode?.riversideEpisodeUrl ||
-  episode?.spotifyUrl ||
-  episode?.applePodcastsUrl ||
-  episode?.youtubeUrl ||
-  episode?.generalEpisodeUrl;
+  cleanString(episode?.riversideEpisodeUrl) ||
+  cleanString(episode?.spotifyUrl) ||
+  cleanString(episode?.applePodcastsUrl) ||
+  cleanString(episode?.youtubeUrl) ||
+  cleanString(episode?.generalEpisodeUrl);

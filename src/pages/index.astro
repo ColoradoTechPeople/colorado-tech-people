@@ -4,7 +4,7 @@ import Container from "@components/Container.astro";
 import EpisodeCard from "@components/EpisodeCard.astro";
 import { sanityClient } from "@lib/sanity/client";
 import { featuredEpisodeQuery, recentEpisodesQuery, siteSettingsQuery } from "@lib/sanity/queries";
-import { FALLBACK_EPISODE_IMAGE, formatPublishDate } from "@lib/episodes";
+import { cleanString, formatPublishDate, getEpisodeImageAlt, getEpisodeImageUrl } from "@lib/episodes";
 import type { EpisodeBase } from "@lib/episodes";
 
 interface ExternalLink { label?: string; url?: string; }
@@ -34,9 +34,15 @@ if (sanityClient) {
 
 const podcastName = siteSettings?.podcastName?.trim() || fallbackPodcastName;
 const positioningStatement = siteSettings?.positioningStatement?.trim() || fallbackPositioningStatement;
-const platformLinks = (siteSettings?.podcastPlatformLinks ?? []).filter((link) => link?.label && link?.url);
+const platformLinks = (siteSettings?.podcastPlatformLinks ?? [])
+  .map((link) => ({ label: cleanString(link?.label), url: cleanString(link?.url) }))
+  .filter((link) => link.label && link.url);
 const featuredDate = formatPublishDate(featuredEpisode?.publishDate);
-const featuredImage = featuredEpisode?.episodeImage?.asset?.url || FALLBACK_EPISODE_IMAGE;
+const featuredImage = getEpisodeImageUrl(featuredEpisode);
+const featuredImageAlt = getEpisodeImageAlt(featuredEpisode);
+const featuredStamp = [featuredDate, featuredEpisode?.episodeNumber ? `Episode ${featuredEpisode.episodeNumber}` : ""]
+  .filter(Boolean)
+  .join(" · ");
 
 ---
 
@@ -69,16 +75,14 @@ const featuredImage = featuredEpisode?.episodeImage?.asset?.url || FALLBACK_EPIS
       <div class="home-featured__panel">
         <div class="home-featured__header">
           <p class="home-featured__label">Featured Episode</p>
-          <span class="home-featured__stamp">
-            {featuredDate}{featuredEpisode?.episodeNumber ? ` · Episode ${featuredEpisode.episodeNumber}` : ""}
-          </span>
+          {featuredStamp && <span class="home-featured__stamp">{featuredStamp}</span>}
         </div>
 
         <div class="home-featured__grid">
           <div class="home-featured__media">
             <img
               src={featuredImage}
-              alt={featuredEpisode.episodeImage?.alt || `Cover image for ${featuredEpisode.title || "episode"}`}
+              alt={featuredImageAlt}
               loading="lazy"
             />
           </div>

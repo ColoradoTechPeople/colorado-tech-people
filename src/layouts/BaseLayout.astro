@@ -5,6 +5,7 @@ import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 import { sanityClient } from "@lib/sanity/client";
 import { siteSettingsQuery } from "@lib/sanity/queries";
+import { cleanString } from "@lib/episodes";
 
 interface ExternalLink {
   label: string;
@@ -47,7 +48,14 @@ if (sanityClient) {
   }
 }
 
-const siteName = siteSettings?.siteName?.trim() || fallbackSiteName;
+const siteName = cleanString(siteSettings?.siteName) || fallbackSiteName;
+const positioningStatement = cleanString(siteSettings?.positioningStatement) || fallbackDescription;
+const podcastPlatformLinks = (siteSettings?.podcastPlatformLinks ?? [])
+  .map((link) => ({ label: cleanString(link?.label), url: cleanString(link?.url) }))
+  .filter((link) => link.label && link.url);
+const socialLinks = (siteSettings?.socialLinks ?? [])
+  .map((link) => ({ label: cleanString(link?.label), url: cleanString(link?.url) }))
+  .filter((link) => link.label && link.url);
 const currentPath = Astro.url.pathname;
 ---
 
@@ -75,9 +83,9 @@ const currentPath = Astro.url.pathname;
 
     <Footer
       siteName={siteName}
-      positioningStatement={siteSettings?.positioningStatement}
-      podcastPlatformLinks={siteSettings?.podcastPlatformLinks}
-      socialLinks={siteSettings?.socialLinks}
+      positioningStatement={positioningStatement}
+      podcastPlatformLinks={podcastPlatformLinks}
+      socialLinks={socialLinks}
       currentPath={currentPath}
     />
   </body>

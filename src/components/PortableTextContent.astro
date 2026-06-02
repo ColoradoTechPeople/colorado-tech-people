@@ -1,5 +1,6 @@
 ---
 import type { PortableTextBlock, PortableTextSpan } from "@lib/episodes";
+import { cleanString } from "@lib/episodes";
 
 interface Props {
   value?: PortableTextBlock[] | null;
@@ -11,19 +12,22 @@ const blocks = value.filter((block) => block?._type === "block");
 
 const renderChildren = (children: PortableTextSpan[] = []) =>
   children.map((child) => child?.text || "").join("");
+
+const renderableBlocks = blocks
+  .map((block) => ({ ...block, text: cleanString(renderChildren(block.children)) }))
+  .filter((block) => block.text);
 ---
 
-<div class="rich-text">
-  {blocks.map((block) => {
-    const text = renderChildren(block.children);
-    if (!text.trim()) return null;
+{renderableBlocks.length > 0 && (
+  <div class="rich-text">
+    {renderableBlocks.map((block) => {
+      if (block.listItem === "bullet") return <ul><li>{block.text}</li></ul>;
+      if (block.listItem === "number") return <ol><li>{block.text}</li></ol>;
+      if (block.style === "h2") return <h2>{block.text}</h2>;
+      if (block.style === "h3") return <h3>{block.text}</h3>;
+      if (block.style === "blockquote") return <blockquote><p>{block.text}</p></blockquote>;
 
-    if (block.listItem === "bullet") return <ul><li>{text}</li></ul>;
-    if (block.listItem === "number") return <ol><li>{text}</li></ol>;
-    if (block.style === "h2") return <h2>{text}</h2>;
-    if (block.style === "h3") return <h3>{text}</h3>;
-    if (block.style === "blockquote") return <blockquote><p>{text}</p></blockquote>;
-
-    return <p>{text}</p>;
-  })}
-</div>
+      return <p>{block.text}</p>;
+    })}
+  </div>
+)}

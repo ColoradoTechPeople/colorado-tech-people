@@ -1,6 +1,6 @@
 ---
 import type { EpisodeBase } from "@lib/episodes";
-import { getEpisodeListenLinks } from "@lib/episodes";
+import { cleanString, getEpisodeListenLinks } from "@lib/episodes";
 
 interface Props {
   episode?: EpisodeBase | null;
@@ -10,12 +10,13 @@ const { episode } = Astro.props;
 const links = getEpisodeListenLinks(episode);
 
 const getIframeSrcFromEmbedCode = (code?: string) => {
-  if (!code) return null;
-  const srcMatch = code.match(/src=["']([^"']+)["']/i);
-  return srcMatch?.[1] || null;
+  const safeCode = cleanString(code);
+  if (!safeCode) return null;
+  const srcMatch = safeCode.match(/src=["']([^"']+)["']/i);
+  return cleanString(srcMatch?.[1]) || null;
 };
 
-const embedSrc = episode?.riversideEmbedUrl || getIframeSrcFromEmbedCode(episode?.riversideEmbedCode);
+const embedSrc = cleanString(episode?.riversideEmbedUrl) || getIframeSrcFromEmbedCode(episode?.riversideEmbedCode);
 ---
 
 <section class="episode-player" aria-label="Listen to this episode">
