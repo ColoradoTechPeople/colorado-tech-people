@@ -69,7 +69,7 @@ const featuredStamp = [featuredDate, featuredEpisode?.episodeNumber ? `Episode $
     </Container>
   </section>
 
-  <Container as="section" class="home-featured" aria-labelledby="featured-episode-heading">
+  <Container as="section" class="home-featured" aria-label="Featured episode">
     {featuredEpisode?.slug ? (
       <div class="home-featured__panel">
         <div class="home-featured__header">
@@ -86,7 +86,6 @@ const featuredStamp = [featuredDate, featuredEpisode?.episodeNumber ? `Episode $
             />
           </div>
           <div class="home-featured__content">
-            <h2 id="featured-episode-heading">Latest Published Episode</h2>
             <EpisodeCard episode={featuredEpisode} featured />
           </div>
         </div>

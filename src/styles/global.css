@@ -492,8 +492,7 @@ textarea {
 }
 
 .home-featured {
-  margin-top: calc(var(--space-6) * -1);
-  padding-block: 0 var(--space-7);
+  padding-block: var(--space-7);
 }
 
 .home-featured__panel {
@@ -539,7 +538,8 @@ textarea {
 }
 
 .home-featured__media {
-  min-height: 13rem;
+  aspect-ratio: 1 / 1;
+  min-height: 0;
   border-radius: var(--radius-md);
   overflow: hidden;
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.15), rgba(240, 90, 26, 0.2));
@@ -559,18 +559,33 @@ textarea {
   color: #fff;
 }
 
-.home-featured__content h2 {
+.home-featured__content h3 {
   font-size: clamp(2rem, 1.6rem + 1.8vw, 3rem);
-  max-width: 18ch;
+  line-height: 1.05;
+  max-width: none;
+  text-align: left;
 }
 
-.home-featured__content p:last-of-type {
-  margin-bottom: var(--space-5);
+.home-featured .episode-card__guest-info {
+  margin-top: var(--space-3);
+  color: var(--color-accent-soft);
+  font-weight: 700;
+}
+
+.home-featured .episode-card__excerpt {
+  margin-top: var(--space-3);
+  max-width: none;
+  font-size: var(--font-size-300);
+  line-height: 1.7;
+  text-align: left;
+}
+
+.home-featured .episode-card__guest-info + .episode-card__excerpt {
+  margin-top: var(--space-2);
 }
 
 .home-featured .episode-card,
-.home-featured .episode-card__body,
-.home-featured .episode-card__actions {
+.home-featured .episode-card__body {
   display: contents;
 }
 
@@ -589,6 +604,11 @@ textarea {
 .home-featured .episode-card__meta {
   gap: var(--space-2) var(--space-4);
   margin-bottom: var(--space-3);
+}
+
+.home-featured .episode-card__actions {
+  display: flex;
+  margin-top: var(--space-4);
 }
 
 .home-featured .episode-card__actions .button-link {
@@ -1190,8 +1210,8 @@ textarea {
   }
 
   .home-featured__grid {
-    grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
-    align-items: center;
+    grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr);
+    align-items: start;
   }
 
   .about-mission__grid {

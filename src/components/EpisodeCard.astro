@@ -17,6 +17,10 @@ const listenHref = getPrimaryListenUrl(episode);
 const imageUrl = getEpisodeImageUrl(episode);
 const imageAlt = getEpisodeImageAlt(episode);
 const excerpt = cleanString(episode.excerpt) || cleanString(episode.summary) || "Explore the episode details and listening options.";
+const guestName = cleanString(episode.guestName);
+const guestTitle = cleanString(episode.guestTitle);
+const guestCompany = cleanString(episode.guestCompany);
+const guestInfo = guestName && guestTitle && guestCompany ? `${guestName} · ${guestTitle}, ${guestCompany}` : "";
 ---
 
 <article class:list={["episode-card", featured && "episode-card--featured"]}>
@@ -29,15 +33,18 @@ const excerpt = cleanString(episode.excerpt) || cleanString(episode.summary) || 
     <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
   )}
   <div class="episode-card__body">
-    <EpisodeMetadata
-      publishDate={episode.publishDate}
-      episodeNumber={episode.episodeNumber}
-      guestName={episode.guestName}
-    />
+    {!featured && (
+      <EpisodeMetadata
+        publishDate={episode.publishDate}
+        episodeNumber={episode.episodeNumber}
+        guestName={episode.guestName}
+      />
+    )}
     <h3>
       {detailHref ? <a href={detailHref}>{title}</a> : title}
     </h3>
-    <p>{excerpt}</p>
+    {featured && guestInfo && <p class="episode-card__guest-info">{guestInfo}</p>}
+    <p class="episode-card__excerpt">{excerpt}</p>
     <TopicChips topics={episode.topics} />
     <div class="episode-card__actions">
       {detailHref && <a class="button-link button-link--primary" href={detailHref}>Read Episode</a>}

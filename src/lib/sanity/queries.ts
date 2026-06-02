@@ -25,6 +25,8 @@ const episodeListProjection = `{
   excerpt,
   summary,
   guestName,
+  guestTitle,
+  guestCompany,
   episodeNumber,
   topics[]->{
     _id,
