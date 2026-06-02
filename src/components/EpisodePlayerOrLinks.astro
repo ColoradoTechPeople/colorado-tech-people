@@ -1,0 +1,44 @@
+---
+import type { EpisodeBase } from "@lib/episodes";
+import { getEpisodeListenLinks } from "@lib/episodes";
+
+interface Props {
+  episode?: EpisodeBase | null;
+}
+
+const { episode } = Astro.props;
+const links = getEpisodeListenLinks(episode);
+
+const getIframeSrcFromEmbedCode = (code?: string) => {
+  if (!code) return null;
+  const srcMatch = code.match(/src=["']([^"']+)["']/i);
+  return srcMatch?.[1] || null;
+};
+
+const embedSrc = episode?.riversideEmbedUrl || getIframeSrcFromEmbedCode(episode?.riversideEmbedCode);
+---
+
+<section class="episode-player" aria-label="Listen to this episode">
+  {embedSrc ? (
+    <div class="episode-player__embed">
+      <iframe
+        src={embedSrc}
+        title={`Embedded player for ${episode?.title || "episode"}`}
+        loading="lazy"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      />
+    </div>
+  ) : (
+    <p class="episode-player__fallback">
+      {links.length > 0 ? "Player embed unavailable. Use one of the listening links below." : "Listening links will be added soon."}
+    </p>
+  )}
+
+  {links.length > 0 && (
+    <ul class="episode-player__links">
+      {links.map((link) => (
+        <li><a href={link.href} target="_blank" rel="noreferrer">{link.label}</a></li>
+      ))}
+    </ul>
+  )}
+</section>

@@ -2,29 +2,80 @@
 import Container from "@components/Container.astro";
 import Wordmark from "@components/Wordmark.astro";
 
-const navLinks = [
+interface NavLink {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  siteName?: string;
+  currentPath?: string;
+}
+
+const { siteName = "Colorado Tech People", currentPath = "/" } = Astro.props;
+
+const desktopNavLinks: NavLink[] = [
   { href: "/episodes", label: "Episodes" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/privacy", label: "Privacy" },
+];
+
+const mobileNavLinks: NavLink[] = [
+  { href: "/", label: "Home" },
+  ...desktopNavLinks,
   { href: "/suggest-a-guest", label: "Suggest a Guest" },
   { href: "/sponsor-the-show", label: "Sponsor the Show" },
-  { href: "/contact", label: "Contact" },
 ];
+
+const isCurrent = (href: string) => {
+  if (href === "/") {
+    return currentPath === "/";
+  }
+
+  return currentPath === href || currentPath.startsWith(`${href}/`);
+};
 ---
 
 <header class="site-header">
   <Container as="div" class="site-header__inner">
-    <Wordmark />
+    <div class="site-header__brand">
+      <Wordmark href="/" label={siteName} />
+    </div>
 
-    <nav aria-label="Primary">
+    <details class="site-nav-mobile">
+      <summary aria-label="Toggle menu">Menu</summary>
+      <nav aria-label="Primary" class="site-nav-mobile__panel">
+        <ul class="site-nav site-nav--mobile">
+          {
+            mobileNavLinks.map((link) => (
+              <li>
+                <a href={link.href} aria-current={isCurrent(link.href) ? "page" : undefined}>
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </details>
+
+    <nav aria-label="Primary" class="site-nav-desktop">
       <ul class="site-nav">
         {
-          navLinks.map((link) => (
+          desktopNavLinks.map((link) => (
             <li>
-              <a href={link.href}>{link.label}</a>
+              <a href={link.href} aria-current={isCurrent(link.href) ? "page" : undefined}>
+                {link.label}
+              </a>
             </li>
           ))
         }
       </ul>
     </nav>
+
+    <a class="button-link button-link--primary site-header__cta" href="/suggest-a-guest">
+      Suggest a Guest
+    </a>
   </Container>
 </header>

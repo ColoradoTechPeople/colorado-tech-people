@@ -1,0 +1,45 @@
+---
+import type { EpisodeBase } from "@lib/episodes";
+import { FALLBACK_EPISODE_IMAGE, getPrimaryListenUrl } from "@lib/episodes";
+import EpisodeMetadata from "@components/EpisodeMetadata.astro";
+import TopicChips from "@components/TopicChips.astro";
+
+interface Props {
+  episode: EpisodeBase;
+  featured?: boolean;
+}
+
+const { episode, featured = false } = Astro.props;
+
+const detailHref = episode.slug ? `/episodes/${episode.slug}` : "";
+const listenHref = getPrimaryListenUrl(episode);
+const imageUrl = episode.episodeImage?.asset?.url || FALLBACK_EPISODE_IMAGE;
+const imageAlt = episode.episodeImage?.alt || `Cover image for ${episode.title || "episode"}`;
+---
+
+<article class:list={["episode-card", featured && "episode-card--featured"]}>
+  {detailHref ? (
+    <a class="episode-card__image-link" href={detailHref} aria-label={`Open ${episode.title || "episode"}`}>
+      {episode.episodeNumber && <span class="episode-card__badge">Episode {episode.episodeNumber}</span>}
+      <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
+    </a>
+  ) : (
+    <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
+  )}
+  <div class="episode-card__body">
+    <EpisodeMetadata
+      publishDate={episode.publishDate}
+      episodeNumber={episode.episodeNumber}
+      guestName={episode.guestName}
+    />
+    <h3>
+      {detailHref ? <a href={detailHref}>{episode.title || "Untitled Episode"}</a> : (episode.title || "Untitled Episode")}
+    </h3>
+    <p>{episode.excerpt || episode.summary || "Explore the episode details and listening options."}</p>
+    <TopicChips topics={episode.topics} />
+    <div class="episode-card__actions">
+      {detailHref && <a class="button-link button-link--primary" href={detailHref}>Read Episode</a>}
+      {listenHref && <a class="button-link" href={listenHref}>Listen Now</a>}
+    </div>
+  </div>
+</article>

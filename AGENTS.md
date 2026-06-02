@@ -174,6 +174,8 @@ At minimum, verify that:
 - Netlify form markup remains detectable in built output when forms are changed.
 - SEO metadata and sitemap behavior remain correct when SEO-related code changes.
 
+Run Sanity fetch checks with network enabled.
+
 If a check cannot be run, explain why and describe what should be verified manually.
 
 ## Final response format

@@ -1,0 +1,20 @@
+---
+import { formatPublishDate } from "@lib/episodes";
+
+interface Props {
+  publishDate?: string;
+  episodeNumber?: number;
+  guestName?: string;
+}
+
+const { publishDate, episodeNumber, guestName } = Astro.props;
+const formattedDate = formatPublishDate(publishDate);
+---
+
+{(formattedDate || episodeNumber || guestName) && (
+  <p class="episode-card__meta">
+    {formattedDate && <span>{formattedDate}</span>}
+    {episodeNumber && <span>Episode {episodeNumber}</span>}
+    {guestName && <span>with {guestName}</span>}
+  </p>
+)}
