@@ -31,8 +31,8 @@ const pageDescription =
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <Container as="section" class="about-hero">
-    <div class="home-hero__inner">
+  <section class="page-hero about-hero">
+    <Container as="div" class="home-hero__inner">
       <div class="page-intro">
         <p class="eyebrow">About The Show</p>
         <h1>A clear, human record of Colorado tech in motion.</h1>
@@ -54,8 +54,8 @@ const pageDescription =
           <h2 class="home-hero__art-title">Local context. Practical lessons. Generous curiosity.</h2>
         </div>
       </div>
-    </div>
-  </Container>
+    </Container>
+  </section>
 
   <Container as="section" class="about-mission" aria-labelledby="about-mission-heading">
     <div class="about-mission__grid">

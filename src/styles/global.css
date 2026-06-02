@@ -384,14 +384,16 @@ textarea {
   font-size: var(--font-size-300);
 }
 
-.home-hero {
+.home-hero,
+.page-hero {
   position: relative;
   overflow: clip;
   border-bottom: 1px solid var(--color-border);
   background: linear-gradient(180deg, rgba(237, 244, 251, 0.88) 0%, rgba(251, 250, 247, 0.96) 78%);
 }
 
-.home-hero::after {
+.home-hero::after,
+.page-hero::after {
   content: "";
   position: absolute;
   inset: auto -8rem -8rem auto;
@@ -402,10 +404,15 @@ textarea {
   pointer-events: none;
 }
 
-.home-hero__inner {
+.home-hero__inner,
+.page-hero__inner {
   display: grid;
   gap: var(--space-6);
   padding-block: var(--space-8) var(--space-7);
+}
+
+.page-hero .page-intro {
+  margin-bottom: 0;
 }
 
 .home-hero__copy h1 {
@@ -610,10 +617,8 @@ textarea {
 
 .home-recent,
 .home-editorial-panels,
-.listing-hero,
 .listing-featured,
 .listing-archive,
-.about-hero,
 .about-mission,
 .about-values,
 .about-editorial,
@@ -1169,10 +1174,15 @@ textarea {
     margin-left: var(--space-3);
   }
 
-  .home-hero__inner {
+  .home-hero__inner,
+  .page-hero__inner {
     grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
     align-items: center;
     padding-block: var(--space-9) var(--space-8);
+  }
+
+  .page-hero__inner {
+    display: block;
   }
 
   .home-featured__panel {

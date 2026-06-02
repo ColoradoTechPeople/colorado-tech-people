@@ -26,13 +26,15 @@ const archiveEpisodes = episodes.slice(1);
 ---
 
 <BaseLayout title="Episodes | Colorado Tech People">
-  <Container as="section" class="listing-hero">
-    <div class="page-intro page-intro--narrow">
-      <p class="eyebrow">Colorado Tech People</p>
-      <h1>Published conversations with Colorado builders, operators, and founders.</h1>
-      <p>Browse the latest episodes in a clean archive built for reading first and listening second.</p>
-    </div>
-  </Container>
+  <section class="page-hero listing-hero">
+    <Container as="div" class="page-hero__inner">
+      <div class="page-intro page-intro--narrow">
+        <p class="eyebrow">Colorado Tech People</p>
+        <h1>Episodes</h1>
+        <p>Browse the latest episodes in a clean archive built for reading first and listening second.</p>
+      </div>
+    </Container>
+  </section>
 
   {featuredEpisode?.slug && (
     <Container as="section" class="listing-featured" aria-labelledby="latest-episode-heading">
