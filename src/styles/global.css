@@ -207,8 +207,20 @@ textarea {
 }
 
 .site-header__brand {
-  display: inline-flex;
+  display: none;
   flex-shrink: 0;
+}
+
+.site-header__logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.site-header__logo img {
+  display: block;
+  width: 3rem;
+  height: 3rem;
 }
 
 .site-nav,
@@ -1206,6 +1218,10 @@ textarea {
 
   .site-nav-mobile {
     display: none;
+  }
+
+  .site-header__brand {
+    display: inline-flex;
   }
 
   .site-nav-desktop {
