@@ -1,8 +1,11 @@
 ---
 import type { EpisodeBase } from "@lib/episodes";
-import { cleanString, getEpisodeImageAlt, getEpisodeImageUrl, getPrimaryListenUrl } from "@lib/episodes";
+import { cleanString, getEpisodeImageAlt, getEpisodeImageUrl } from "@lib/episodes";
 import EpisodeMetadata from "@components/EpisodeMetadata.astro";
 import TopicChips from "@components/TopicChips.astro";
+import applePodcastsIcon from "../../assets/platform-icons/apple-podcasts.png";
+import spotifyIcon from "../../assets/platform-icons/spotify.png";
+import youtubeIcon from "../../assets/platform-icons/youtube.png";
 
 interface Props {
   episode: EpisodeBase;
@@ -11,9 +14,13 @@ interface Props {
 
 const { episode, featured = false } = Astro.props;
 
+const platformLinks = [
+  { label: "Apple Podcasts", href: cleanString(episode.applePodcastsUrl), icon: "apple", iconSrc: applePodcastsIcon.src },
+  { label: "Spotify", href: cleanString(episode.spotifyUrl), icon: "spotify", iconSrc: spotifyIcon.src },
+  { label: "YouTube", href: cleanString(episode.youtubeUrl), icon: "youtube", iconSrc: youtubeIcon.src },
+].filter((link) => link.href);
 const title = cleanString(episode.title) || "Untitled Episode";
 const detailHref = cleanString(episode.slug) ? `/episodes/${cleanString(episode.slug)}` : "";
-const listenHref = getPrimaryListenUrl(episode);
 const imageUrl = getEpisodeImageUrl(episode);
 const imageAlt = getEpisodeImageAlt(episode);
 const excerpt = cleanString(episode.excerpt) || cleanString(episode.summary) || "Explore the episode details and listening options.";
@@ -47,8 +54,26 @@ const guestInfo = guestName && guestTitle && guestCompany ? `${guestName} · ${g
     <p class="episode-card__excerpt">{excerpt}</p>
     <TopicChips topics={episode.topics} />
     <div class="episode-card__actions">
-      {detailHref && <a class="button-link button-link--primary" href={detailHref}>Read Episode</a>}
-      {listenHref && <a class="button-link" href={listenHref}>Listen Now</a>}
+      {detailHref && <a class="button-link button-link--primary" href={detailHref}>More</a>}
+      {platformLinks.length > 0 && (
+        <div class="episode-card__platforms" aria-label="Listen on">
+          {platformLinks.map((link) => (
+            <a
+              class:list={["episode-card__platform-link", `episode-card__platform-link--${link.icon}`]}
+              href={link.href}
+              aria-label={`Listen to ${title} on ${link.label}`}
+            >
+              <img
+                class:list={["episode-card__platform-logo", `episode-card__platform-logo--${link.icon}`]}
+                src={link.iconSrc}
+                alt=""
+                loading="lazy"
+                aria-hidden="true"
+              />
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   </div>
 </article>
