@@ -62,14 +62,16 @@ const featuredStamp = [featuredDate, featuredEpisode?.episodeNumber ? `Episode $
       </div>
 
       <div class="home-hero__art home-hero__art--image">
-        <img
-          src={podcastHeroImage.src}
-          width={podcastHeroImage.width}
-          height={podcastHeroImage.height}
-          alt="Colorado Tech People podcast hero artwork"
-          loading="eager"
-          decoding="async"
-        />
+        <div class="home-hero__image-frame">
+          <img
+            src={podcastHeroImage.src}
+            width={podcastHeroImage.width}
+            height={podcastHeroImage.height}
+            alt="Colorado Tech People podcast hero artwork"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
       </div>
     </Container>
   </section>
