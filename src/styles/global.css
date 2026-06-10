@@ -371,7 +371,7 @@ textarea {
 .home-kicker {
   margin: 0 0 var(--space-3);
   color: var(--color-accent);
-  font-size: 0.75rem;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -536,7 +536,7 @@ textarea {
   z-index: 1;
   inset-block: 0;
   left: 0;
-  width: 20%;
+  width: 40%;
   display: none;
   pointer-events: none;
 }
@@ -574,7 +574,7 @@ textarea {
 .home-featured__label {
   margin: 0;
   color: var(--color-accent-soft);
-  font-size: 0.75rem;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1354,8 +1354,8 @@ textarea {
     z-index: -1;
     inset: 0;
     background: linear-gradient(180deg, rgb(237, 244, 251) 0%, rgb(251, 250, 247) 100%);
-    mask-image: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.3) 100%);
-    -webkit-mask-image: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.3) 100%);
+    mask-image: linear-gradient(90deg, #000 0%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, transparent 100%);
   }
 
   .home-hero__inner .home-hero__art--image {
