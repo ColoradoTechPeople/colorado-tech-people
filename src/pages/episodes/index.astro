@@ -21,51 +21,24 @@ if (sanityClient) {
   }
 }
 
-const featuredEpisode = episodes[0] ?? null;
-const archiveEpisodes = episodes.slice(1);
 ---
 
 <BaseLayout title="Episodes | Colorado Tech People">
   <section class="page-hero listing-hero">
     <Container as="div" class="page-hero__inner">
-      <div class="page-intro page-intro--narrow">
-        <p class="eyebrow">Colorado Tech People</p>
-        <h1>Episodes</h1>
+      <div class="page-intro">
+        <p class="eyebrow">Episode Archive</p>
+        <h1>All published episodes</h1>
         <p>Browse the latest episodes in a clean archive built for reading first and listening second.</p>
       </div>
     </Container>
   </section>
 
-  {featuredEpisode?.slug && (
-    <Container as="section" class="listing-featured" aria-labelledby="latest-episode-heading">
-      <div class="home-section-heading">
-        <div>
-          <p class="home-kicker">Latest Episode</p>
-          <h2 id="latest-episode-heading">Start here</h2>
-        </div>
-      </div>
-      <EpisodeCard episode={featuredEpisode} featured />
-    </Container>
-  )}
-
-  <Container as="section" class="listing-archive" aria-labelledby="episode-archive-heading">
-    <div class="home-section-heading">
-      <div>
-        <p class="home-kicker">Episode Archive</p>
-        <h2 id="episode-archive-heading">All published episodes</h2>
-      </div>
-    </div>
-
+  <Container as="section" class="listing-archive">
     {episodes.length > 0 ? (
-      (featuredEpisode ? archiveEpisodes : episodes).length > 0 ? (
-        <ul class="episode-grid episode-grid--stacked">
-          {(featuredEpisode ? archiveEpisodes : episodes).map((episode) => <li><EpisodeCard episode={episode} /></li>)}
-        </ul>
-      ) : (
-        <div class="episode-card episode-card--empty">
-          <p>More published episodes will appear here as the archive grows.</p>
-        </div>
-      )
+      <ul class="episode-grid episode-grid--stacked">
+        {episodes.map((episode) => <li><EpisodeCard episode={episode} /></li>)}
+      </ul>
     ) : (
       <div class="episode-card episode-card--empty">
         <p>No published episodes are available yet. Check back soon.</p>

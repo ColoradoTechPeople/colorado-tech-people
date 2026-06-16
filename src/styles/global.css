@@ -427,6 +427,10 @@ textarea {
   margin-bottom: 0;
 }
 
+.listing-hero .page-intro p:last-child {
+  max-width: none;
+}
+
 .home-hero__copy h1 {
   font-size: var(--font-size-600);
   max-width: 12ch;
