@@ -123,7 +123,7 @@ const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._i
               aria-controls="episode-transcript-content"
               data-transcript-toggle
             >
-              Show more
+              <span data-transcript-toggle-label>Show more</span>
             </button>
           </section>
         )}
@@ -176,11 +176,12 @@ const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._i
   <script>
     const transcriptToggle = document.querySelector("[data-transcript-toggle]");
     const transcriptContent = document.querySelector("[data-transcript-content]");
+    const transcriptToggleLabel = document.querySelector("[data-transcript-toggle-label]");
 
     transcriptToggle?.addEventListener("click", () => {
-      transcriptContent?.classList.add("is-expanded");
-      transcriptToggle.setAttribute("aria-expanded", "true");
-      transcriptToggle.remove();
+      const isExpanded = transcriptContent?.classList.toggle("is-expanded") || false;
+      transcriptToggle.setAttribute("aria-expanded", String(isExpanded));
+      if (transcriptToggleLabel) transcriptToggleLabel.textContent = isExpanded ? "Show less" : "Show more";
     });
   </script>
 </BaseLayout>
