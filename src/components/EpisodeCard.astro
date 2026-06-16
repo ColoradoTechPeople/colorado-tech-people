@@ -28,6 +28,9 @@ const guestName = cleanString(episode.guestName);
 const guestTitle = cleanString(episode.guestTitle);
 const guestCompany = cleanString(episode.guestCompany);
 const guestInfo = guestName && guestTitle && guestCompany ? `${guestName} · ${guestTitle}, ${guestCompany}` : "";
+const guestMeta = [guestTitle, guestCompany].filter(Boolean).join(", ");
+const hasGuestOverlay = Boolean(guestName || guestMeta);
+const excerptId = `episode-excerpt-${episode._id.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
 ---
 
 <article class:list={["episode-card", featured && "episode-card--featured"]}>
@@ -35,23 +38,43 @@ const guestInfo = guestName && guestTitle && guestCompany ? `${guestName} · ${g
     <a class="episode-card__image-link" href={detailHref} aria-label={`Open ${title}`}>
       {episode.episodeNumber && <span class="episode-card__badge">Episode {episode.episodeNumber}</span>}
       <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
+      {hasGuestOverlay && (
+        <span class="episode-card__guest-overlay">
+          {guestName && <span class="episode-card__guest-name">{guestName}</span>}
+          {guestMeta && <span class="episode-card__guest-meta">{guestMeta}</span>}
+        </span>
+      )}
     </a>
   ) : (
-    <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
+    <div class="episode-card__image-frame">
+      <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
+      {hasGuestOverlay && (
+        <span class="episode-card__guest-overlay">
+          {guestName && <span class="episode-card__guest-name">{guestName}</span>}
+          {guestMeta && <span class="episode-card__guest-meta">{guestMeta}</span>}
+        </span>
+      )}
+    </div>
   )}
   <div class="episode-card__body">
     {!featured && (
-      <EpisodeMetadata
-        publishDate={episode.publishDate}
-        episodeNumber={episode.episodeNumber}
-        guestName={episode.guestName}
-      />
+      <EpisodeMetadata publishDate={episode.publishDate} />
     )}
     <h3>
       {detailHref ? <a href={detailHref}>{title}</a> : title}
     </h3>
     {featured && guestInfo && <p class="episode-card__guest-info">{guestInfo}</p>}
-    <p class="episode-card__excerpt">{excerpt}</p>
+    <p id={excerptId} class="episode-card__excerpt" data-episode-excerpt>{excerpt}</p>
+    <button
+      class="episode-card__excerpt-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls={excerptId}
+      data-episode-excerpt-toggle
+      hidden
+    >
+      Show more
+    </button>
     <TopicChips topics={episode.topics} />
     <div class="episode-card__actions">
       {detailHref && <a class="button-link button-link--primary" href={detailHref}>More</a>}
@@ -77,3 +100,28 @@ const guestInfo = guestName && guestTitle && guestCompany ? `${guestName} · ${g
     </div>
   </div>
 </article>
+
+<script>
+  const episodeExcerptCards = document.querySelectorAll(".episode-card");
+
+  episodeExcerptCards.forEach((card) => {
+    const excerpt = card.querySelector("[data-episode-excerpt]");
+    const toggle = card.querySelector("[data-episode-excerpt-toggle]");
+
+    if (!(excerpt instanceof HTMLElement) || !(toggle instanceof HTMLButtonElement)) return;
+
+    const setToggleVisibility = () => {
+      if (excerpt.classList.contains("is-expanded")) return;
+      toggle.hidden = excerpt.scrollHeight <= excerpt.clientHeight + 1;
+    };
+
+    setToggleVisibility();
+    window.addEventListener("resize", setToggleVisibility);
+
+    toggle.addEventListener("click", () => {
+      const isExpanded = excerpt.classList.toggle("is-expanded");
+      toggle.setAttribute("aria-expanded", String(isExpanded));
+      toggle.textContent = isExpanded ? "Show less" : "Show more";
+    });
+  });
+</script>

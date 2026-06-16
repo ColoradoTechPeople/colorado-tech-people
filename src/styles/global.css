@@ -752,6 +752,11 @@ textarea {
   background: linear-gradient(160deg, #dde8f6, #ffffff 42%, #c6d8ef);
 }
 
+.episode-card__image-frame {
+  position: relative;
+  background: linear-gradient(160deg, #dde8f6, #ffffff 42%, #c6d8ef);
+}
+
 .episode-card__image-link::after {
   content: "";
   position: absolute;
@@ -797,6 +802,41 @@ textarea {
   object-fit: cover;
 }
 
+.episode-card__guest-overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: grid;
+  align-content: center;
+  min-height: 15%;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary-strong);
+  color: #fff;
+}
+
+.episode-card__guest-name,
+.episode-card__guest-meta {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.episode-card__guest-name {
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.episode-card__guest-meta {
+  margin-top: 0.1rem;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.76rem;
+  line-height: 1.25;
+}
+
 .episode-card__body {
   display: grid;
   align-content: start;
@@ -829,6 +869,35 @@ textarea {
 
 .episode-card__body p {
   margin: 0;
+}
+
+.episode-card__excerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.episode-card__excerpt.is-expanded {
+  display: block;
+  overflow: visible;
+}
+
+.episode-card__excerpt-toggle {
+  justify-self: start;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--color-primary);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
+}
+
+.episode-card__excerpt-toggle:hover {
+  color: var(--color-primary-strong);
 }
 
 .topic-chips {

@@ -82,7 +82,7 @@ const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._i
     <div class="episode-detail__grid">
       <div class="episode-detail__main">
         <p class="eyebrow">Colorado Tech People</p>
-        <EpisodeMetadata publishDate={episode.publishDate} episodeNumber={episode.episodeNumber} guestName={guestName} />
+        <EpisodeMetadata publishDate={episode.publishDate} />
         <h1>{episodeTitle}</h1>
         <p class="episode-detail__lede">{episodeSummary}</p>
         <TopicChips topics={episode.topics} />
