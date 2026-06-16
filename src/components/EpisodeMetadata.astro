@@ -1,21 +1,16 @@
 ---
-import { cleanString, formatPublishDate } from "@lib/episodes";
+import { formatPublishDate } from "@lib/episodes";
 
 interface Props {
   publishDate?: string;
-  episodeNumber?: number;
-  guestName?: string;
 }
 
-const { publishDate, episodeNumber, guestName } = Astro.props;
+const { publishDate } = Astro.props;
 const formattedDate = formatPublishDate(publishDate);
-const cleanGuestName = cleanString(guestName);
 ---
 
-{(formattedDate || episodeNumber || cleanGuestName) && (
+{formattedDate && (
   <p class="episode-card__meta">
-    {formattedDate && <span>{formattedDate}</span>}
-    {episodeNumber && <span>Episode {episodeNumber}</span>}
-    {cleanGuestName && <span>with {cleanGuestName}</span>}
+    <span>{formattedDate}</span>
   </p>
 )}

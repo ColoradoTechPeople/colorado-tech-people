@@ -1,6 +1,7 @@
 ---
 import Container from "@components/Container.astro";
 import Wordmark from "@components/Wordmark.astro";
+import minimalLogo from "../../assets/Logo_minimal.png";
 
 interface NavLink {
   href: string;
@@ -38,6 +39,17 @@ const isCurrent = (href: string) => {
 
 <header class="site-header">
   <Container as="div" class="site-header__inner">
+    <a class="site-header__logo" href="/" aria-label={siteName}>
+      <img
+        src={minimalLogo.src}
+        width={minimalLogo.width}
+        height={minimalLogo.height}
+        alt=""
+        loading="eager"
+        decoding="async"
+      />
+    </a>
+
     <div class="site-header__brand">
       <Wordmark href="/" label={siteName} />
     </div>

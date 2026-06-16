@@ -1,8 +1,11 @@
 ---
 import type { EpisodeBase } from "@lib/episodes";
-import { cleanString, getEpisodeImageAlt, getEpisodeImageUrl, getPrimaryListenUrl } from "@lib/episodes";
+import { cleanString, getEpisodeImageAlt, getEpisodeImageUrl } from "@lib/episodes";
 import EpisodeMetadata from "@components/EpisodeMetadata.astro";
 import TopicChips from "@components/TopicChips.astro";
+import applePodcastsIcon from "../../assets/platform-icons/apple-podcasts.png";
+import spotifyIcon from "../../assets/platform-icons/spotify.png";
+import youtubeIcon from "../../assets/platform-icons/youtube.png";
 
 interface Props {
   episode: EpisodeBase;
@@ -11,9 +14,13 @@ interface Props {
 
 const { episode, featured = false } = Astro.props;
 
+const platformLinks = [
+  { label: "Apple Podcasts", href: cleanString(episode.applePodcastsUrl), icon: "apple", iconSrc: applePodcastsIcon.src },
+  { label: "Spotify", href: cleanString(episode.spotifyUrl), icon: "spotify", iconSrc: spotifyIcon.src },
+  { label: "YouTube", href: cleanString(episode.youtubeUrl), icon: "youtube", iconSrc: youtubeIcon.src },
+].filter((link) => link.href);
 const title = cleanString(episode.title) || "Untitled Episode";
 const detailHref = cleanString(episode.slug) ? `/episodes/${cleanString(episode.slug)}` : "";
-const listenHref = getPrimaryListenUrl(episode);
 const imageUrl = getEpisodeImageUrl(episode);
 const imageAlt = getEpisodeImageAlt(episode);
 const excerpt = cleanString(episode.excerpt) || cleanString(episode.summary) || "Explore the episode details and listening options.";
@@ -21,6 +28,9 @@ const guestName = cleanString(episode.guestName);
 const guestTitle = cleanString(episode.guestTitle);
 const guestCompany = cleanString(episode.guestCompany);
 const guestInfo = guestName && guestTitle && guestCompany ? `${guestName} · ${guestTitle}, ${guestCompany}` : "";
+const guestMeta = [guestTitle, guestCompany].filter(Boolean).join(", ");
+const hasGuestOverlay = Boolean(guestName || guestMeta);
+const excerptId = `episode-excerpt-${episode._id.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
 ---
 
 <article class:list={["episode-card", featured && "episode-card--featured"]}>
@@ -28,27 +38,90 @@ const guestInfo = guestName && guestTitle && guestCompany ? `${guestName} · ${g
     <a class="episode-card__image-link" href={detailHref} aria-label={`Open ${title}`}>
       {episode.episodeNumber && <span class="episode-card__badge">Episode {episode.episodeNumber}</span>}
       <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
+      {hasGuestOverlay && (
+        <span class="episode-card__guest-overlay">
+          {guestName && <span class="episode-card__guest-name">{guestName}</span>}
+          {guestMeta && <span class="episode-card__guest-meta">{guestMeta}</span>}
+        </span>
+      )}
     </a>
   ) : (
-    <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
+    <div class="episode-card__image-frame">
+      <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
+      {hasGuestOverlay && (
+        <span class="episode-card__guest-overlay">
+          {guestName && <span class="episode-card__guest-name">{guestName}</span>}
+          {guestMeta && <span class="episode-card__guest-meta">{guestMeta}</span>}
+        </span>
+      )}
+    </div>
   )}
   <div class="episode-card__body">
     {!featured && (
-      <EpisodeMetadata
-        publishDate={episode.publishDate}
-        episodeNumber={episode.episodeNumber}
-        guestName={episode.guestName}
-      />
+      <EpisodeMetadata publishDate={episode.publishDate} />
     )}
     <h3>
       {detailHref ? <a href={detailHref}>{title}</a> : title}
     </h3>
     {featured && guestInfo && <p class="episode-card__guest-info">{guestInfo}</p>}
-    <p class="episode-card__excerpt">{excerpt}</p>
+    <p id={excerptId} class="episode-card__excerpt" data-episode-excerpt>{excerpt}</p>
+    <button
+      class="episode-card__excerpt-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls={excerptId}
+      data-episode-excerpt-toggle
+      hidden
+    >
+      Show more
+    </button>
     <TopicChips topics={episode.topics} />
     <div class="episode-card__actions">
-      {detailHref && <a class="button-link button-link--primary" href={detailHref}>Read Episode</a>}
-      {listenHref && <a class="button-link" href={listenHref}>Listen Now</a>}
+      {detailHref && <a class="button-link button-link--primary" href={detailHref}>More</a>}
+      {platformLinks.length > 0 && (
+        <div class="episode-card__platforms" aria-label="Listen on">
+          {platformLinks.map((link) => (
+            <a
+              class:list={["episode-card__platform-link", `episode-card__platform-link--${link.icon}`]}
+              href={link.href}
+              aria-label={`Listen to ${title} on ${link.label}`}
+            >
+              <img
+                class:list={["episode-card__platform-logo", `episode-card__platform-logo--${link.icon}`]}
+                src={link.iconSrc}
+                alt=""
+                loading="lazy"
+                aria-hidden="true"
+              />
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   </div>
 </article>
+
+<script>
+  const episodeExcerptCards = document.querySelectorAll(".episode-card");
+
+  episodeExcerptCards.forEach((card) => {
+    const excerpt = card.querySelector("[data-episode-excerpt]");
+    const toggle = card.querySelector("[data-episode-excerpt-toggle]");
+
+    if (!(excerpt instanceof HTMLElement) || !(toggle instanceof HTMLButtonElement)) return;
+
+    const setToggleVisibility = () => {
+      if (excerpt.classList.contains("is-expanded")) return;
+      toggle.hidden = excerpt.scrollHeight <= excerpt.clientHeight + 1;
+    };
+
+    setToggleVisibility();
+    window.addEventListener("resize", setToggleVisibility);
+
+    toggle.addEventListener("click", () => {
+      const isExpanded = excerpt.classList.toggle("is-expanded");
+      toggle.setAttribute("aria-expanded", String(isExpanded));
+      toggle.textContent = isExpanded ? "Show less" : "Show more";
+    });
+  });
+</script>

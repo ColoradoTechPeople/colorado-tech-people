@@ -1,13 +1,21 @@
 ---
 import type { EpisodeBase } from "@lib/episodes";
-import { cleanString, getEpisodeListenLinks } from "@lib/episodes";
+import { cleanString } from "@lib/episodes";
+import applePodcastsIcon from "../../assets/platform-icons/apple-podcasts.png";
+import spotifyIcon from "../../assets/platform-icons/spotify.png";
+import youtubeIcon from "../../assets/platform-icons/youtube.png";
 
 interface Props {
   episode?: EpisodeBase | null;
 }
 
 const { episode } = Astro.props;
-const links = getEpisodeListenLinks(episode);
+const title = cleanString(episode?.title) || "this episode";
+const platformLinks = [
+  { label: "Apple Podcasts", href: cleanString(episode?.applePodcastsUrl), icon: "apple", iconSrc: applePodcastsIcon.src },
+  { label: "Spotify", href: cleanString(episode?.spotifyUrl), icon: "spotify", iconSrc: spotifyIcon.src },
+  { label: "YouTube", href: cleanString(episode?.youtubeUrl), icon: "youtube", iconSrc: youtubeIcon.src },
+].filter((link) => link.href);
 
 const getIframeSrcFromEmbedCode = (code?: string) => {
   const safeCode = cleanString(code);
@@ -31,14 +39,30 @@ const embedSrc = cleanString(episode?.riversideEmbedUrl) || getIframeSrcFromEmbe
     </div>
   ) : (
     <p class="episode-player__fallback">
-      {links.length > 0 ? "Player embed unavailable. Use one of the listening links below." : "Listening links will be added soon."}
+      Episode trailer is COMING SOON!
     </p>
   )}
 
-  {links.length > 0 && (
+  {platformLinks.length > 0 && (
     <ul class="episode-player__links">
-      {links.map((link) => (
-        <li><a href={link.href} target="_blank" rel="noreferrer">{link.label}</a></li>
+      {platformLinks.map((link) => (
+        <li>
+          <a
+            class:list={["episode-card__platform-link", `episode-card__platform-link--${link.icon}`]}
+            href={link.href}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`Listen to ${title} on ${link.label}`}
+          >
+            <img
+              class:list={["episode-card__platform-logo", `episode-card__platform-logo--${link.icon}`]}
+              src={link.iconSrc}
+              alt=""
+              loading="lazy"
+              aria-hidden="true"
+            />
+          </a>
+        </li>
       ))}
     </ul>
   )}

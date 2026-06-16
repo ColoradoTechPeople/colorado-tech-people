@@ -2,6 +2,7 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Container from "@components/Container.astro";
 import EpisodeCard from "@components/EpisodeCard.astro";
+import podcastHeroImage from "../../assets/Podcast Hero.png";
 import { sanityClient } from "@lib/sanity/client";
 import { featuredEpisodeQuery, recentEpisodesQuery, siteSettingsQuery } from "@lib/sanity/queries";
 import { cleanString, formatPublishDate, getEpisodeImageAlt, getEpisodeImageUrl } from "@lib/episodes";
@@ -43,6 +44,7 @@ const featuredImageAlt = getEpisodeImageAlt(featuredEpisode);
 const featuredStamp = [featuredDate, featuredEpisode?.episodeNumber ? `Episode ${featuredEpisode.episodeNumber}` : ""]
   .filter(Boolean)
   .join(" · ");
+const homeRecentEpisodes = recentEpisodes.slice(0, 3);
 
 ---
 
@@ -60,10 +62,16 @@ const featuredStamp = [featuredDate, featuredEpisode?.episodeNumber ? `Episode $
         </div>
       </div>
 
-      <div class="home-hero__art" aria-hidden="true">
-        <div class="home-hero__art-inner">
-          <p class="home-hero__art-label">Colorado Tech People</p>
-          <h2 class="home-hero__art-title">Warm, credible conversations with the people building Colorado.</h2>
+      <div class="home-hero__art home-hero__art--image">
+        <div class="home-hero__image-frame">
+          <img
+            src={podcastHeroImage.src}
+            width={podcastHeroImage.width}
+            height={podcastHeroImage.height}
+            alt="Colorado Tech People podcast hero artwork"
+            loading="eager"
+            decoding="async"
+          />
         </div>
       </div>
     </Container>
@@ -99,13 +107,12 @@ const featuredStamp = [featuredDate, featuredEpisode?.episodeNumber ? `Episode $
 
   <Container as="section" class="home-recent" aria-labelledby="recent-episodes-heading">
     <div class="home-section-heading">
-      <p class="home-kicker">Recent Conversations</p>
-      <h2 id="recent-episodes-heading">New From The Show</h2>
+      <h2 id="recent-episodes-heading">Recent Conversations</h2>
     </div>
 
-    {recentEpisodes.length > 0 ? (
+    {homeRecentEpisodes.length > 0 ? (
       <ul class="episode-grid">
-        {recentEpisodes.map((episode) => (
+        {homeRecentEpisodes.map((episode) => (
           <li><EpisodeCard episode={episode} /></li>
         ))}
       </ul>
