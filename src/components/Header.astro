@@ -16,13 +16,12 @@ interface Props {
 const { siteName = "Colorado Tech People", currentPath = "/" } = Astro.props;
 
 const desktopNavLinks: NavLink[] = [
+  { href: "/", label: "Home" },
   { href: "/episodes", label: "Episodes" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/team", label: "Team" },
 ];
 
 const mobileNavLinks: NavLink[] = [
-  { href: "/", label: "Home" },
   ...desktopNavLinks,
   { href: "/suggest-a-guest", label: "Suggest a Guest" },
   { href: "/sponsor-the-show", label: "Sponsor the Show" },
