@@ -60,8 +60,7 @@ const imageAlt = getEpisodeImageAlt(episode);
 const guestName = cleanString(episode.guestName);
 const guestTitle = cleanString(episode.guestTitle);
 const guestCompany = cleanString(episode.guestCompany);
-const hasGuestBio = hasPortableText(episode.guestBio);
-const hasGuestSection = Boolean(guestName || guestTitle || guestCompany || hasGuestBio);
+const hasGuestSection = Boolean(guestName || guestTitle || guestCompany);
 const guestMeta = [guestTitle, guestCompany].filter(Boolean).join(", ");
 const hasShowNotes = hasPortableText(episode.showNotes);
 const hasTranscript = hasPortableText(episode.transcript);
@@ -114,7 +113,18 @@ const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._i
         {hasTranscript && (
           <section class="episode-detail__text-card" aria-labelledby="transcript-heading">
             <h2 id="transcript-heading">Transcript</h2>
-            <PortableTextContent value={episode.transcript} />
+            <div id="episode-transcript-content" class="episode-detail__transcript-content" data-transcript-content>
+              <PortableTextContent value={episode.transcript} />
+            </div>
+            <button
+              class="episode-detail__transcript-toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="episode-transcript-content"
+              data-transcript-toggle
+            >
+              Show more
+            </button>
           </section>
         )}
       </div>
@@ -132,7 +142,6 @@ const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._i
                 {guestMeta}
               </p>
             )}
-            {hasGuestBio && <PortableTextContent value={episode.guestBio} />}
           </section>
         )}
 
@@ -163,4 +172,15 @@ const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._i
       </section>
     )}
   </Container>
+
+  <script>
+    const transcriptToggle = document.querySelector("[data-transcript-toggle]");
+    const transcriptContent = document.querySelector("[data-transcript-content]");
+
+    transcriptToggle?.addEventListener("click", () => {
+      transcriptContent?.classList.add("is-expanded");
+      transcriptToggle.setAttribute("aria-expanded", "true");
+      transcriptToggle.remove();
+    });
+  </script>
 </BaseLayout>

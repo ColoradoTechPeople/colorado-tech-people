@@ -1104,28 +1104,15 @@ textarea {
 .episode-player__links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  align-items: center;
+  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.episode-player__links a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.75rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  padding: 0.6rem 1rem;
-  background: #fff;
-  color: var(--color-text);
-  text-decoration: none;
-}
-
-.episode-player__links a:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+.episode-player__links li {
+  display: flex;
 }
 
 .episode-detail {
@@ -1186,19 +1173,19 @@ textarea {
   border-color: rgba(255, 255, 255, 0.18);
 }
 
-.episode-detail__player-card .episode-player__links a {
-  background: rgba(255, 255, 255, 0.08);
+.episode-detail__player-card .episode-card__platform-link {
   border-color: rgba(255, 255, 255, 0.22);
-  color: #fff;
+  box-shadow: none;
 }
 
-.episode-detail__player-card .episode-player__links a:hover {
-  background: rgba(255, 255, 255, 0.16);
+.episode-detail__player-card .episode-card__platform-link:hover {
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: var(--shadow-md);
 }
 
 .episode-detail__image {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
@@ -1213,6 +1200,43 @@ textarea {
   gap: var(--space-2);
   margin: 0;
   padding-left: 1rem;
+}
+
+.episode-detail__transcript-content {
+  position: relative;
+  max-height: calc(1.72em * 4);
+  overflow: hidden;
+}
+
+.episode-detail__transcript-content.is-expanded {
+  max-height: none;
+  overflow: visible;
+}
+
+.episode-detail__transcript-content:not(.is-expanded)::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2.5rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), var(--color-surface));
+  content: "";
+  pointer-events: none;
+}
+
+.episode-detail__transcript-toggle {
+  display: inline-flex;
+  align-items: center;
+  margin-top: var(--space-3);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--color-primary);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+  cursor: pointer;
 }
 
 .episode-detail__sidebar {
