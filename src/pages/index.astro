@@ -3,6 +3,9 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import Container from "@components/Container.astro";
 import EpisodeCard from "@components/EpisodeCard.astro";
 import podcastHeroImage from "../../assets/Podcast Hero.png";
+import applePodcastsIcon from "../../assets/platform-icons/apple-podcasts.png";
+import spotifyIcon from "../../assets/platform-icons/spotify.png";
+import youtubeIcon from "../../assets/platform-icons/youtube.png";
 import { sanityClient } from "@lib/sanity/client";
 import { featuredEpisodeQuery, recentEpisodesQuery, siteSettingsQuery } from "@lib/sanity/queries";
 import { cleanString, formatPublishDate, getEpisodeImageAlt, getEpisodeImageUrl } from "@lib/episodes";
@@ -10,6 +13,15 @@ import type { EpisodeBase } from "@lib/episodes";
 
 interface ExternalLink { label?: string; url?: string; }
 interface SiteSettings { podcastName?: string; positioningStatement?: string; podcastPlatformLinks?: ExternalLink[]; }
+
+const platformIconConfig = [
+  { match: "apple", icon: "apple", iconSrc: applePodcastsIcon.src },
+  { match: "spotify", icon: "spotify", iconSrc: spotifyIcon.src },
+  { match: "youtube", icon: "youtube", iconSrc: youtubeIcon.src },
+];
+
+const getPlatformIcon = (label: string) =>
+  platformIconConfig.find((platform) => label.toLowerCase().includes(platform.match));
 
 const fallbackPodcastName = "Colorado Tech People";
 const fallbackPositioningStatement =
@@ -37,7 +49,8 @@ const podcastName = siteSettings?.podcastName?.trim() || fallbackPodcastName;
 const positioningStatement = siteSettings?.positioningStatement?.trim() || fallbackPositioningStatement;
 const platformLinks = (siteSettings?.podcastPlatformLinks ?? [])
   .map((link) => ({ label: cleanString(link?.label), url: cleanString(link?.url) }))
-  .filter((link) => link.label && link.url);
+  .filter((link) => link.label && link.url)
+  .map((link) => ({ ...link, ...getPlatformIcon(link.label) }));
 const featuredDate = formatPublishDate(featuredEpisode?.publishDate);
 const featuredImage = getEpisodeImageUrl(featuredEpisode);
 const featuredImageAlt = getEpisodeImageAlt(featuredEpisode);
@@ -58,7 +71,6 @@ const homeRecentEpisodes = recentEpisodes.slice(0, 3);
         <p class="home-hero__lede">{positioningStatement}</p>
         <div class="home-hero__actions">
           <a class="button-link button-link--primary" href="/episodes">Browse Episodes</a>
-          <a class="button-link button-link--secondary" href="/team">Meet The Team</a>
         </div>
       </div>
 
@@ -123,17 +135,6 @@ const homeRecentEpisodes = recentEpisodes.slice(0, 3);
 
   <Container as="section" class="home-editorial-panels">
     <div class="home-editorial-panels__grid">
-      <div class="editorial-panel">
-        <p class="home-kicker">Team</p>
-        <h2>Built for Colorado’s tech community</h2>
-        <p>
-          We focus on thoughtful conversations with builders, operators, and investors across Colorado. Each episode
-          is designed to be useful for founders, product teams, engineering leaders, and emerging talent navigating
-          the local ecosystem.
-        </p>
-        <a class="button-link button-link--secondary" href="/team">Meet The Team</a>
-      </div>
-
       <div class="editorial-panel editorial-panel--dark">
         <p class="home-kicker">Colorado Perspective</p>
         <h2>Rooted in Colorado. Connected everywhere.</h2>
@@ -169,7 +170,31 @@ const homeRecentEpisodes = recentEpisodes.slice(0, 3);
 
       {platformLinks.length > 0 ? (
         <ul class="home-subscribe-band__links">
-          {platformLinks.map((link) => <li><a href={link.url}>{link.label}</a></li>)}
+          {platformLinks.map((link) => (
+            <li>
+              <a
+                class:list={[
+                  "home-subscribe-band__link",
+                  link.icon && "episode-card__platform-link",
+                  link.icon && `episode-card__platform-link--${link.icon}`,
+                ]}
+                href={link.url}
+                aria-label={`Listen on ${link.label}`}
+              >
+                {link.iconSrc ? (
+                  <img
+                    class:list={["episode-card__platform-logo", `episode-card__platform-logo--${link.icon}`]}
+                    src={link.iconSrc}
+                    alt=""
+                    loading="lazy"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <span>{link.label}</span>
+                )}
+              </a>
+            </li>
+          ))}
         </ul>
       ) : (
         <p class="home-subscribe-band__placeholder">

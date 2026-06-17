@@ -1014,6 +1014,10 @@ textarea {
   gap: var(--space-5);
 }
 
+.home-editorial-panels__grid > :only-child {
+  grid-column: 1 / -1;
+}
+
 .editorial-panel,
 .info-card,
 .privacy-card {
@@ -1110,13 +1114,18 @@ textarea {
 .home-subscribe-band__links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  align-items: center;
+  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.home-subscribe-band__links a {
+.home-subscribe-band__link {
+  text-decoration: none;
+}
+
+.home-subscribe-band__link:not(.episode-card__platform-link) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1129,7 +1138,7 @@ textarea {
   text-decoration: none;
 }
 
-.home-subscribe-band__links a:hover {
+.home-subscribe-band__link:not(.episode-card__platform-link):hover {
   background: var(--color-primary);
   color: #fff;
 }
