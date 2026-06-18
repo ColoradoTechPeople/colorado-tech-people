@@ -1,0 +1,15 @@
+---
+interface Props {
+  kind?: "helper" | "success" | "error";
+  title?: string;
+  class?: string;
+}
+
+const { kind = "helper", title, class: className } = Astro.props;
+const role = kind === "error" ? "alert" : kind === "success" ? "status" : undefined;
+---
+
+<div class:list={["form-message", `form-message--${kind}`, className]} role={role}>
+  {title && <p class="form-message__title">{title}</p>}
+  <div class="form-message__content"><slot /></div>
+</div>

@@ -1,10 +1,38 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import Container from "@components/Container.astro";
+import Form from "@components/forms/Form.astro";
+import FormActions from "@components/forms/FormActions.astro";
+import FormCheckbox from "@components/forms/FormCheckbox.astro";
+import FormField from "@components/forms/FormField.astro";
+import FormHidden from "@components/forms/FormHidden.astro";
+
+const pageTitle = "Contact | Colorado Tech People";
+const pageDescription = "Contact the Colorado Tech People podcast team with a question or general inquiry.";
 ---
 
-<BaseLayout title="Contact | Colorado Tech People">
-  <section class="site-shell">
-    <h1>Contact (Placeholder)</h1>
-    <p>Temporary Phase 1 scaffold for future contact form content.</p>
-  </section>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <Container as="section" class="section-shell">
+    <div class="page-intro page-intro--narrow">
+      <p class="eyebrow">Contact</p>
+      <h1>Get in touch</h1>
+      <p>Send the Colorado Tech People team a question, idea, or general inquiry.</p>
+    </div>
+
+    <Form name="contact">
+      <FormHidden name="form_type" value="General Contact" />
+      <FormHidden name="source" value="contact" />
+      <FormField id="contact-name" name="name" label="Name" autocomplete="name" required />
+      <FormField id="contact-email" name="email" label="Email" type="email" autocomplete="email" required />
+      <FormField id="contact-subject" name="subject" label="Subject" required />
+      <FormField id="contact-message" name="message" label="Message" type="textarea" required />
+      <FormCheckbox
+        id="contact-consent"
+        name="contact_consent"
+        label="You may contact me about this inquiry."
+        required
+      />
+      <FormActions submitLabel="Send Message" note="Required fields are marked with an asterisk." />
+    </Form>
+  </Container>
 </BaseLayout>

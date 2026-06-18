@@ -1,0 +1,31 @@
+---
+import FormHidden from "./FormHidden.astro";
+import FormHoneypot from "./FormHoneypot.astro";
+
+interface Props {
+  name: string;
+  action?: string;
+  honeypotName?: string;
+  class?: string;
+}
+
+const {
+  name,
+  action = "/thank-you",
+  honeypotName = "bot-field",
+  class: className,
+} = Astro.props;
+---
+
+<form
+  class:list={["form", className]}
+  name={name}
+  method="POST"
+  action={action}
+  data-netlify="true"
+  netlify-honeypot={honeypotName}
+>
+  <FormHidden name="form-name" value={name} />
+  <FormHoneypot name={honeypotName} />
+  <slot />
+</form>

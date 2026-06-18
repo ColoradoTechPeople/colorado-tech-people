@@ -1,0 +1,14 @@
+---
+interface Props {
+  submitLabel: string;
+  note?: string;
+  class?: string;
+}
+
+const { submitLabel, note, class: className } = Astro.props;
+---
+
+<div class:list={["form-actions", className]}>
+  <button class="button-link button-link--primary form-submit" type="submit">{submitLabel}</button>
+  {note && <p class="form-actions__note">{note}</p>}
+</div>

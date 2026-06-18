@@ -1,10 +1,81 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import Container from "@components/Container.astro";
+import Form from "@components/forms/Form.astro";
+import FormActions from "@components/forms/FormActions.astro";
+import FormCheckbox from "@components/forms/FormCheckbox.astro";
+import FormField from "@components/forms/FormField.astro";
+import FormHidden from "@components/forms/FormHidden.astro";
+
+const pageTitle = "Sponsor the Show | Colorado Tech People";
+const pageDescription = "Start a sponsorship conversation with the Colorado Tech People podcast.";
 ---
 
-<BaseLayout title="Sponsor the Show | Colorado Tech People">
-  <section class="site-shell">
-    <h1>Sponsor the Show (Placeholder)</h1>
-    <p>Temporary Phase 1 scaffold for future sponsor inquiry form content.</p>
-  </section>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <Container as="section" class="section-shell">
+    <div class="page-intro page-intro--narrow sponsor-intro">
+      <p class="eyebrow">Sponsor Inquiry</p>
+      <h1>Sponsor the show</h1>
+      <p>
+        Colorado Tech People is where Colorado’s founders, product leaders, builders, and innovators share the real
+        stories behind building technology that matters.
+      </p>
+      <p>
+        Sponsoring the show is an opportunity to reach an audience that cares about startups, product thinking, AI,
+        innovation, and the future of Colorado’s tech ecosystem.
+      </p>
+      <p>
+        We partner with organizations that want to support thoughtful conversations, local builders, and the people
+        shaping what comes next.
+      </p>
+      <p>
+        Your sponsorship helps us spotlight more Colorado companies, share more founder lessons, and bring more
+        visibility to the ideas being built in our community.
+      </p>
+      <p>
+        Whether you are hiring, investing, serving startups, supporting product teams, or building something of your
+        own, Colorado Tech People offers a meaningful way to connect with an engaged and growing audience.
+      </p>
+      <p>
+        We are especially excited to work with sponsors whose values align with curiosity, innovation, practical
+        technology, and community building.
+      </p>
+      <p>
+        Interested in partnering with us? Reach out to learn more about sponsorship opportunities for upcoming
+        episodes.
+      </p>
+    </div>
+
+    <Form name="sponsor-inquiry">
+      <FormHidden name="form_type" value="Sponsor Inquiry" />
+      <FormHidden name="source" value="sponsor-the-show" />
+      <FormField id="sponsor-name" name="name" label="Name" autocomplete="name" required />
+      <FormField id="sponsor-email" name="email" label="Work email" type="email" autocomplete="email" required />
+      <FormField id="sponsor-phone" name="phone_number" label="Phone number" autocomplete="tel" required />
+      <FormField id="sponsor-company" name="company" label="Company name" autocomplete="organization" required />
+      <FormField
+        id="sponsor-website"
+        name="company_website"
+        label="Company website"
+        placeholder="https://"
+        required
+      />
+      <FormField id="sponsor-budget" name="budget_range" label="Budget range (optional)" />
+      <FormField id="sponsor-timeline" name="desired_timeline" label="Desired timeline (optional)" />
+      <FormField id="sponsor-message" name="message" label="Message" type="textarea" required />
+      <FormCheckbox
+        id="sponsor-consent"
+        name="contact_consent"
+        label="You may contact me about this sponsorship inquiry."
+        required
+      />
+      <FormActions submitLabel="Send Sponsor Inquiry" note="Required fields are marked with an asterisk." />
+    </Form>
+  </Container>
 </BaseLayout>
+
+<style>
+  .sponsor-intro p {
+    font-size: 16px;
+  }
+</style>
