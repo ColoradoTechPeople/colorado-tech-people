@@ -121,7 +121,6 @@ h6 {
 
 p {
   margin: 0 0 var(--space-4);
-  max-width: 70ch;
   color: var(--color-text-muted);
   line-height: var(--line-height-relaxed);
 }
@@ -715,6 +714,10 @@ textarea {
   padding-block: var(--space-7);
 }
 
+.privacy-section .page-intro--narrow {
+  width: 100%;
+}
+
 .episode-grid {
   display: grid;
   gap: var(--space-5);
@@ -1039,6 +1042,14 @@ textarea {
 .editorial-panel--dark p,
 .editorial-panel--dark li {
   color: #fff;
+}
+
+.home-editorial-panels .editorial-panel--dark h2,
+.home-editorial-panels .editorial-panel--dark p {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .about-list {
