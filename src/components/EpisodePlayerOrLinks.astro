@@ -17,32 +17,9 @@ const platformLinks = [
   { label: "YouTube", href: cleanString(episode?.youtubeUrl), icon: "youtube", iconSrc: youtubeIcon.src },
 ].filter((link) => link.href);
 
-const getIframeSrcFromEmbedCode = (code?: string) => {
-  const safeCode = cleanString(code);
-  if (!safeCode) return null;
-  const srcMatch = safeCode.match(/src=["']([^"']+)["']/i);
-  return cleanString(srcMatch?.[1]) || null;
-};
-
-const embedSrc = cleanString(episode?.riversideEmbedUrl) || getIframeSrcFromEmbedCode(episode?.riversideEmbedCode);
 ---
 
 <section class="episode-player" aria-label="Listen to this episode">
-  {embedSrc ? (
-    <div class="episode-player__embed">
-      <iframe
-        src={embedSrc}
-        title={`Embedded player for ${episode?.title || "episode"}`}
-        loading="lazy"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      />
-    </div>
-  ) : (
-    <p class="episode-player__fallback">
-      Episode trailer is COMING SOON!
-    </p>
-  )}
-
   {platformLinks.length > 0 && (
     <ul class="episode-player__links">
       {platformLinks.map((link) => (
