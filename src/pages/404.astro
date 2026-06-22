@@ -1,0 +1,25 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import Container from "@components/Container.astro";
+
+const pageDescription = "The requested page could not be found on Colorado Tech People.";
+---
+
+<BaseLayout
+  title="Page Not Found"
+  description={pageDescription}
+  robots="noindex, follow"
+  includeCanonical={false}
+>
+  <Container as="section" class="section-shell">
+    <div class="page-intro page-intro--narrow">
+      <p class="eyebrow">404</p>
+      <h1>Page not found</h1>
+      <p>The page you requested does not exist or may have moved.</p>
+      <div class="home-hero__actions">
+        <a class="button-link button-link--primary" href="/">Return Home</a>
+        <a class="button-link button-link--secondary" href="/episodes">Browse Episodes</a>
+      </div>
+    </div>
+  </Container>
+</BaseLayout>

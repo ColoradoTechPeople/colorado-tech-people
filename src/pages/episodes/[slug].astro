@@ -10,6 +10,7 @@ import { sanityClient } from "@lib/sanity/client";
 import { allPublishedEpisodesQuery, episodeBySlugQuery } from "@lib/sanity/queries";
 import { cleanString, getEpisodeImageAlt, getEpisodeImageUrl, hasPortableText } from "@lib/episodes";
 import type { EpisodeBase } from "@lib/episodes";
+import { firstMetadataText, getEpisodeCanonicalUrl, metadataPlainText } from "@lib/episode-seo.mjs";
 
 export async function getStaticPaths() {
   if (!sanityClient) return [];
@@ -49,12 +50,18 @@ if (!episode) {
 const episodeTitle = cleanString(episode.title) || "Untitled Episode";
 const episodeSummary =
   cleanString(episode.summary) || cleanString(episode.excerpt) || "Episode details and listening options are coming soon.";
-const title = cleanString(episode.seoTitle) || `${episodeTitle} | Colorado Tech People`;
-const description =
-  cleanString(episode.seoDescription) ||
-  cleanString(episode.excerpt) ||
-  cleanString(episode.summary) ||
-  "Published episode details and listening options.";
+const explicitSeoTitle = metadataPlainText(episode.seoTitle);
+const title = explicitSeoTitle || metadataPlainText(episodeTitle);
+const description = firstMetadataText([
+  episode.seoDescription,
+  episode.excerpt,
+  episode.summary,
+]) || undefined;
+const canonicalUrl = getEpisodeCanonicalUrl({
+  canonicalUrl: episode.canonicalUrl,
+  slug: episode.slug || slug,
+  episodeLabel: episode.slug || episodeTitle,
+});
 const imageUrl = getEpisodeImageUrl(episode);
 const imageAlt = getEpisodeImageAlt(episode);
 const guestName = cleanString(episode.guestName);
@@ -73,8 +80,10 @@ const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._i
 <BaseLayout
   title={title}
   description={description}
-  canonicalUrl={cleanString(episode.canonicalUrl) || undefined}
+  canonicalUrl={canonicalUrl}
   ogImage={cleanString(episode.ogImage?.asset?.url) || cleanString(episode.episodeImage?.asset?.url) || undefined}
+  completeTitle={Boolean(explicitSeoTitle)}
+  ogType="article"
 >
   <Container as="article" class="episode-detail">
     <p class="episode-detail__back-link"><a href="/episodes">Back to all episodes</a></p>

@@ -6,6 +6,8 @@ import Footer from "@components/Footer.astro";
 import { sanityClient } from "@lib/sanity/client";
 import { siteSettingsQuery } from "@lib/sanity/queries";
 import { cleanString } from "@lib/episodes";
+import { firstMetadataText, resolveOgImage, resolvePageTitle } from "@lib/episode-seo.mjs";
+import fallbackOgImage from "../../assets/logo.png";
 
 interface ExternalLink {
   label: string;
@@ -16,6 +18,13 @@ interface SiteSettings {
   siteName?: string;
   podcastName?: string;
   positioningStatement?: string;
+  defaultSeoTitle?: string;
+  defaultSeoDescription?: string;
+  defaultOgImage?: {
+    asset?: {
+      url?: string;
+    };
+  };
   podcastPlatformLinks?: ExternalLink[];
   socialLinks?: ExternalLink[];
 }
@@ -25,6 +34,10 @@ interface Props {
   description?: string;
   canonicalUrl?: string;
   ogImage?: string;
+  completeTitle?: boolean;
+  robots?: string;
+  includeCanonical?: boolean;
+  ogType?: "website" | "article";
 }
 
 const fallbackSiteName = "Colorado Tech People";
@@ -32,10 +45,14 @@ const fallbackDescription =
   "Colorado Tech People is an editorial podcast spotlighting the builders, operators, and ideas shaping Colorado tech.";
 
 const {
-  title = fallbackSiteName,
-  description = fallbackDescription,
+  title,
+  description,
   canonicalUrl,
   ogImage,
+  completeTitle = false,
+  robots,
+  includeCanonical = true,
+  ogType = "website",
 } = Astro.props;
 
 let siteSettings: SiteSettings | null = null;
@@ -50,6 +67,22 @@ if (sanityClient) {
 
 const siteName = cleanString(siteSettings?.siteName) || fallbackSiteName;
 const positioningStatement = cleanString(siteSettings?.positioningStatement) || fallbackDescription;
+const resolvedTitle = resolvePageTitle({
+  title,
+  defaultTitle: siteSettings?.defaultSeoTitle,
+  siteName: fallbackSiteName,
+  completeTitle,
+});
+const resolvedDescription = firstMetadataText([
+  description,
+  siteSettings?.defaultSeoDescription,
+  fallbackDescription,
+]);
+const resolvedOgImage = resolveOgImage({
+  pageImage: ogImage,
+  defaultImage: siteSettings?.defaultOgImage?.asset?.url,
+  fallbackImage: fallbackOgImage.src,
+});
 const podcastPlatformLinks = (siteSettings?.podcastPlatformLinks ?? [])
   .map((link) => ({ label: cleanString(link?.label), url: cleanString(link?.url) }))
   .filter((link) => link.label && link.url);
@@ -64,12 +97,15 @@ const currentPath = Astro.url.pathname;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <title>{resolvedTitle}</title>
     <SEO
-      title={title}
-      description={description}
+      title={resolvedTitle}
+      description={resolvedDescription}
       canonicalUrl={canonicalUrl}
-      ogImage={ogImage}
+      ogImage={resolvedOgImage}
+      robots={robots}
+      includeCanonical={includeCanonical}
+      ogType={ogType}
     />
   </head>
   <body>

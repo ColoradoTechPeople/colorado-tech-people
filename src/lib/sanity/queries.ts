@@ -13,6 +13,15 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   siteName,
   podcastName,
   positioningStatement,
+  defaultSeoTitle,
+  defaultSeoDescription,
+  defaultOgImage{
+    alt,
+    caption,
+    asset->{
+      url
+    }
+  },
   podcastPlatformLinks[]{label, url},
   socialLinks[]{label, url}
 }`;

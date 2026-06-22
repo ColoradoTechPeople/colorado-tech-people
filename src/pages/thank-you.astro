@@ -3,11 +3,11 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import Container from "@components/Container.astro";
 import FormMessage from "@components/forms/FormMessage.astro";
 
-const pageTitle = "Thank You | Colorado Tech People";
+const pageTitle = "Thank You";
 const pageDescription = "Confirmation that Colorado Tech People received your submission.";
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout title={pageTitle} description={pageDescription} robots="noindex, follow">
   <Container as="section" class="section-shell">
     <div class="page-intro page-intro--narrow">
       <p class="eyebrow">Submission Received</p>

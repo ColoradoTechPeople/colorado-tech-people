@@ -12,7 +12,7 @@ import { cleanString, formatPublishDate, getEpisodeImageAlt, getEpisodeImageUrl 
 import type { EpisodeBase } from "@lib/episodes";
 
 interface ExternalLink { label?: string; url?: string; }
-interface SiteSettings { podcastName?: string; positioningStatement?: string; podcastPlatformLinks?: ExternalLink[]; }
+interface SiteSettings { positioningStatement?: string; podcastPlatformLinks?: ExternalLink[]; }
 
 const platformIconConfig = [
   { match: "apple", icon: "apple", iconSrc: applePodcastsIcon.src },
@@ -23,7 +23,6 @@ const platformIconConfig = [
 const getPlatformIcon = (label: string) =>
   platformIconConfig.find((platform) => label.toLowerCase().includes(platform.match));
 
-const fallbackPodcastName = "Colorado Tech People";
 const fallbackPositioningStatement =
   "An editorial podcast spotlighting the people, companies, and ideas shaping the Colorado tech ecosystem.";
 
@@ -45,7 +44,6 @@ if (sanityClient) {
   }
 }
 
-const podcastName = siteSettings?.podcastName?.trim() || fallbackPodcastName;
 const positioningStatement = siteSettings?.positioningStatement?.trim() || fallbackPositioningStatement;
 const platformLinks = (siteSettings?.podcastPlatformLinks ?? [])
   .map((link) => ({ label: cleanString(link?.label), url: cleanString(link?.url) }))
@@ -58,10 +56,11 @@ const featuredStamp = [featuredDate, featuredEpisode?.episodeNumber ? `Episode $
   .filter(Boolean)
   .join(" · ");
 const homeRecentEpisodes = recentEpisodes.slice(0, 3);
+const pageTitle = "Colorado Tech People | Stories Shaping Colorado Tech";
 
 ---
 
-<BaseLayout title={`${podcastName} | Home`} description={positioningStatement}>
+<BaseLayout title={pageTitle} description={positioningStatement} completeTitle>
   <section class="home-hero">
     <Container as="div" class="home-hero__inner">
       <div class="home-hero__copy">
