@@ -10,6 +10,10 @@ function isLocalhost(hostname) {
   );
 }
 
+function isNetlifyDeployPreviewHost(hostname) {
+  return hostname.endsWith(".netlify.app") && hostname.includes("--");
+}
+
 export function getSiteUrl(value, { production = false } = {}) {
   const rawValue = value?.trim();
 
@@ -53,6 +57,12 @@ export function getSiteUrl(value, { production = false } = {}) {
   if (production && isLocalhost(siteUrl.hostname)) {
     throw new Error(
       `PUBLIC_SITE_URL cannot resolve to localhost in production. Received: ${JSON.stringify(rawValue)}`
+    );
+  }
+
+  if (production && isNetlifyDeployPreviewHost(siteUrl.hostname)) {
+    throw new Error(
+      `PUBLIC_SITE_URL cannot resolve to a Netlify preview domain in production. Received: ${JSON.stringify(rawValue)}`
     );
   }
 

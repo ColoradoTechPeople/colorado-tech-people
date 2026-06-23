@@ -13,6 +13,13 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
   siteName,
   podcastName,
   positioningStatement,
+  logo{
+    alt,
+    caption,
+    asset->{
+      url
+    }
+  },
   defaultSeoTitle,
   defaultSeoDescription,
   defaultOgImage{
@@ -22,6 +29,7 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0]{
       url
     }
   },
+  riversideRssUrl,
   podcastPlatformLinks[]{label, url},
   socialLinks[]{label, url}
 }`;

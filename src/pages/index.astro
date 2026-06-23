@@ -2,7 +2,9 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Container from "@components/Container.astro";
 import EpisodeCard from "@components/EpisodeCard.astro";
+import JsonLd from "@components/JsonLd.astro";
 import podcastHeroImage from "../../assets/Podcast Hero.png";
+import podcastLogo from "../../assets/logo.png";
 import applePodcastsIcon from "../../assets/platform-icons/apple-podcasts.png";
 import spotifyIcon from "../../assets/platform-icons/spotify.png";
 import youtubeIcon from "../../assets/platform-icons/youtube.png";
@@ -10,9 +12,25 @@ import { sanityClient } from "@lib/sanity/client";
 import { featuredEpisodeQuery, recentEpisodesQuery, siteSettingsQuery } from "@lib/sanity/queries";
 import { cleanString, formatPublishDate, getEpisodeImageAlt, getEpisodeImageUrl } from "@lib/episodes";
 import type { EpisodeBase } from "@lib/episodes";
+import { absoluteHttpUrl, publicPodcastFeedUrl } from "@lib/json-ld.mjs";
 
 interface ExternalLink { label?: string; url?: string; }
-interface SiteSettings { positioningStatement?: string; podcastPlatformLinks?: ExternalLink[]; }
+interface SiteSettings {
+  positioningStatement?: string;
+  logo?: { asset?: { url?: string } };
+  riversideRssUrl?: string;
+  podcastPlatformLinks?: ExternalLink[];
+}
+
+const productionOrigin = "https://www.coloradotechpeople.com";
+const siteUrl = `${productionOrigin}/`;
+const podcastDescription =
+  "Conversations with founders, operators, builders, and innovators across Colorado — sharing real stories, lessons learned, and the future we’re building together.";
+const podcastSameAs = [
+  "https://open.spotify.com/show/1J6Hfb3PTsEkUvYYFf8bNm",
+  "https://www.youtube.com/playlist?list=PL1MavnQcsbGAvnP2f7Q-Vq6LB4fXVf4De",
+  "https://podcasts.apple.com/podcast/id1893439868",
+];
 
 const platformIconConfig = [
   { match: "apple", icon: "apple", iconSrc: applePodcastsIcon.src },
@@ -57,10 +75,37 @@ const featuredStamp = [featuredDate, featuredEpisode?.episodeNumber ? `Episode $
   .join(" · ");
 const homeRecentEpisodes = recentEpisodes.slice(0, 3);
 const pageTitle = "Colorado Tech People | Stories Shaping Colorado Tech";
+const podcastImage =
+  absoluteHttpUrl(siteSettings?.logo?.asset?.url) || new URL(podcastLogo.src, siteUrl).toString();
+const podcastFeed = publicPodcastFeedUrl(siteSettings?.riversideRssUrl);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}#website`,
+      url: siteUrl,
+      name: "Colorado Tech People",
+      description: positioningStatement,
+    },
+    {
+      "@type": "PodcastSeries",
+      "@id": `${siteUrl}#podcast`,
+      url: siteUrl,
+      name: "Colorado Tech People",
+      description: podcastDescription,
+      inLanguage: "en-US",
+      image: podcastImage,
+      sameAs: podcastSameAs,
+      ...(podcastFeed ? { webFeed: podcastFeed } : {}),
+    },
+  ],
+};
 
 ---
 
 <BaseLayout title={pageTitle} description={positioningStatement} completeTitle>
+  <JsonLd data={structuredData} />
   <section class="home-hero">
     <Container as="div" class="home-hero__inner">
       <div class="home-hero__copy">
