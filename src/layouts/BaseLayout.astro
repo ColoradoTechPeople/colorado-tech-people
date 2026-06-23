@@ -3,6 +3,7 @@ import "@styles/global.css";
 import SEO from "@components/SEO.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
+import GoogleAnalytics from "@components/GoogleAnalytics.astro";
 import { sanityClient } from "@lib/sanity/client";
 import { siteSettingsQuery } from "@lib/sanity/queries";
 import { cleanString } from "@lib/episodes";
@@ -107,6 +108,7 @@ const currentPath = Astro.url.pathname;
       includeCanonical={includeCanonical}
       ogType={ogType}
     />
+    <GoogleAnalytics />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>

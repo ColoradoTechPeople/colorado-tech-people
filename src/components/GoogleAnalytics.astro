@@ -1,0 +1,25 @@
+---
+const measurementId = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID?.trim() ?? "";
+const shouldLoadGoogleAnalytics = import.meta.env.PROD && measurementId.length > 0;
+const googleAnalyticsUrl = shouldLoadGoogleAnalytics
+  ? `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`
+  : "";
+---
+
+{
+  shouldLoadGoogleAnalytics && (
+    <>
+      <script is:inline async src={googleAnalyticsUrl}></script>
+      <script is:inline define:vars={{ measurementId }}>
+        window.dataLayer = window.dataLayer || [];
+        window.gtag =
+          window.gtag ||
+          function gtag() {
+            window.dataLayer.push(arguments);
+          };
+        window.gtag("js", new Date());
+        window.gtag("config", measurementId);
+      </script>
+    </>
+  )
+}
