@@ -867,6 +867,7 @@ button {
 }
 
 .home-featured .episode-card__image-link,
+.home-featured .episode-card__media,
 .home-featured .episode-card__image {
   display: none;
 }
@@ -880,6 +881,10 @@ button {
   display: flex;
   align-items: center;
   margin-top: var(--space-4);
+}
+
+.home-featured .episode-card__actions .episode-card__platforms {
+  display: inline-flex;
 }
 
 .home-featured .episode-card__actions .button-link {
@@ -944,7 +949,7 @@ button {
 
 .episode-card {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: minmax(6.25rem, 34%) minmax(0, 1fr);
   gap: 0;
   height: 100%;
   border: 1px solid var(--color-border);
@@ -954,7 +959,15 @@ button {
   box-shadow: var(--shadow-sm);
 }
 
+.episode-card__media {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
 .episode-card--empty {
+  display: block;
   padding: var(--space-5);
   background: var(--color-surface-muted);
 }
@@ -965,6 +978,12 @@ button {
   color: inherit;
   text-decoration: none;
   background: linear-gradient(160deg, #dde8f6, #ffffff 42%, #c6d8ef);
+}
+
+.episode-card:not(.episode-card--featured) .episode-card__image-link,
+.episode-card:not(.episode-card--featured) .episode-card__image-frame {
+  border-radius: calc(var(--radius-md) - 0.25rem);
+  overflow: hidden;
 }
 
 .episode-card__image-frame {
@@ -994,6 +1013,11 @@ button {
   border-top: 0.42rem solid transparent;
   border-bottom: 0.42rem solid transparent;
   border-left: 0.62rem solid var(--color-primary);
+}
+
+.episode-card__image-link::before,
+.episode-card__image-link::after {
+  display: none;
 }
 
 .episode-card__badge {
@@ -1031,6 +1055,11 @@ button {
   color: #fff;
 }
 
+.episode-card:not(.episode-card--featured) .episode-card__badge,
+.episode-card:not(.episode-card--featured) .episode-card__guest-overlay {
+  display: none;
+}
+
 .episode-card__guest-name,
 .episode-card__guest-meta {
   display: block;
@@ -1055,8 +1084,9 @@ button {
 .episode-card__body {
   display: grid;
   align-content: start;
-  gap: var(--space-3);
-  padding: var(--space-5);
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3) var(--space-3) var(--space-3) 0;
 }
 
 .episode-card__meta {
@@ -1068,9 +1098,28 @@ button {
   font-size: 0.78rem;
 }
 
+.episode-card__meta--desktop {
+  display: none;
+}
+
+.episode-card__meta--mobile {
+  display: block;
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .episode-card__body h3 {
+  display: -webkit-box;
   margin: 0;
-  font-size: clamp(1.35rem, 1.1rem + 0.4vw, 1.65rem);
+  overflow: hidden;
+  font-size: 1rem;
+  line-height: 1.2;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .episode-card__body h3 a {
@@ -1090,7 +1139,9 @@ button {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
+  font-size: 0.84rem;
+  line-height: 1.45;
 }
 
 .episode-card__excerpt.is-expanded {
@@ -1099,6 +1150,7 @@ button {
 }
 
 .episode-card__excerpt-toggle {
+  display: none;
   justify-self: start;
   border: 0;
   padding: 0;
@@ -1124,6 +1176,10 @@ button {
   list-style: none;
 }
 
+.episode-card:not(.episode-card--featured) .topic-chips {
+  display: none;
+}
+
 .topic-chips li {
   border: 1px solid #d6e2f3;
   border-radius: var(--radius-pill);
@@ -1135,17 +1191,22 @@ button {
 
 .episode-card__actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: 0;
+}
+
+.episode-card__actions .episode-card__platforms {
+  display: none;
 }
 
 .episode-card__platforms {
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: var(--space-2);
+  gap: 0.35rem;
 }
 
 .episode-card__platform-link {
@@ -1166,6 +1227,15 @@ button {
     border-color 120ms ease,
     box-shadow 120ms ease,
     transform 120ms ease;
+}
+
+.episode-card__platforms--mobile {
+  justify-content: center;
+}
+
+.episode-card:not(.episode-card--featured) .episode-card__platform-link {
+  width: 1.95rem;
+  height: 1.95rem;
 }
 
 .episode-card__platform-link:hover {
@@ -1863,6 +1933,91 @@ button {
 
   .episode-grid--stacked {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .episode-card {
+    grid-template-columns: none;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .episode-card__media {
+    display: block;
+    padding: 0;
+  }
+
+  .episode-card:not(.episode-card--featured) .episode-card__image-link,
+  .episode-card:not(.episode-card--featured) .episode-card__image-frame {
+    border-radius: 0;
+  }
+
+  .episode-card__image-link::before,
+  .episode-card__image-link::after {
+    display: block;
+  }
+
+  .episode-card:not(.episode-card--featured) .episode-card__badge {
+    display: inline-flex;
+  }
+
+  .episode-card:not(.episode-card--featured) .episode-card__guest-overlay {
+    display: grid;
+  }
+
+  .episode-card__body {
+    gap: var(--space-3);
+    padding: var(--space-5);
+  }
+
+  .episode-card__meta--desktop {
+    display: block;
+  }
+
+  .episode-card__meta--mobile,
+  .episode-card__platforms--mobile {
+    display: none;
+  }
+
+  .episode-card__body h3 {
+    display: block;
+    overflow: visible;
+    font-size: clamp(1.35rem, 1.1rem + 0.4vw, 1.65rem);
+    line-height: normal;
+    -webkit-line-clamp: initial;
+  }
+
+  .episode-card__excerpt {
+    -webkit-line-clamp: 4;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  .episode-card__excerpt-toggle {
+    display: inline;
+  }
+
+  .episode-card:not(.episode-card--featured) .topic-chips {
+    display: flex;
+  }
+
+  .episode-card__actions {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  .episode-card__actions .episode-card__platforms {
+    display: inline-flex;
+  }
+
+  .episode-card__platforms {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .episode-card:not(.episode-card--featured) .episode-card__platform-link {
+    width: 2.85rem;
+    height: 2.85rem;
   }
 
   .team-card {
