@@ -1,156 +1,81 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
 import Container from "@components/Container.astro";
-import { sanityClient } from "@lib/sanity/client";
-import { siteSettingsQuery } from "@lib/sanity/queries";
+import monishaHeadshot from "../../assets/team/monisha-saldanha.jpeg";
+import nehaHeadshot from "../../assets/team/neha-myer.jpeg";
+import anastasiaHeadshot from "../../assets/team/anastasia-voronkova.png";
 
-interface SiteSettings {
-  podcastName?: string;
-  positioningStatement?: string;
-}
-
-const fallbackPodcastName = "Colorado Tech People";
-const fallbackPositioningStatement =
-  "An editorial podcast spotlighting the people, companies, and ideas shaping the Colorado tech ecosystem.";
-
-let siteSettings: SiteSettings | null = null;
-
-if (sanityClient) {
-  try {
-    siteSettings = await sanityClient.fetch<SiteSettings>(siteSettingsQuery);
-  } catch {
-    siteSettings = null;
-  }
-}
-
-const podcastName = siteSettings?.podcastName?.trim() || fallbackPodcastName;
-const positioningStatement = siteSettings?.positioningStatement?.trim() || fallbackPositioningStatement;
 const pageTitle = "Team";
 const pageDescription =
-  "Meet the team behind Colorado Tech People and learn about the podcast's mission, editorial approach, and Colorado tech focus.";
+  "Meet the team behind Colorado Tech People, the editorial podcast spotlighting Colorado's technology ecosystem.";
+
+const teamMembers = [
+  {
+    name: "Monisha Saldanha",
+    role: "Co-Founder",
+    biography:
+      "Monisha Saldanha is a product leader, educator, and podcast host passionate about helping organizations use technology to solve meaningful real-world problems. Over the past 15+ years, she has led product teams across healthcare, government, telecommunications, and SaaS, translating complex challenges into products that deliver measurable impact. Through her podcast, Colorado Tech People, she shares the stories and lessons of founders and executives building the next generation of technology companies. A graduate of Georgetown University and Harvard Business School, Monisha is committed to developing leaders and fostering innovation in Colorado's technology ecosystem.",
+    headshot: monishaHeadshot,
+    alt: "Portrait of Monisha Saldanha",
+  },
+  {
+    name: "Neha Myer",
+    role: "Co-Founder",
+    biography:
+      "Neha Myer is a growth and marketing leader, community builder, and podcast host with two decades of experience building revenue functions across retail and venture-backed organizations. She specializes in translating customer insights into compelling narratives, go-to-market strategies, and experiences that help businesses grow. As co-founder of Colorado Tech People, Neha helps uncover and share the stories of founders and leaders shaping Colorado's technology ecosystem. She is also an active contributor to Boulder's startup community, supporting founders through workshops, events, and her work with Boulder Startup Week. Neha is passionate about bringing people together, strengthening entrepreneurial communities, and helping meaningful ideas find the audiences they deserve.",
+    headshot: nehaHeadshot,
+    alt: "Portrait of Neha Myer",
+  },
+  {
+    name: "Anastasia Voronkova",
+    role: "Tech Fellow",
+    biography:
+      "Anastasia Voronkova is a product and technology leader with more than 15 years of experience building digital products, operational systems, and customer experiences across startups and established organizations. Her work spans e-commerce, outdoor technology, media, and enterprise platforms, with a focus on turning complex needs into practical, maintainable solutions. For Colorado Tech People, Anastasia provides technology and process guidance and built the podcast's website from the ground up, creating the foundation for publishing episodes, supporting audience growth, and managing ongoing content. She is passionate about helping small teams make thoughtful technology decisions, establish efficient workflows, and build products that can evolve sustainably as their organizations grow.",
+    headshot: anastasiaHeadshot,
+    alt: "Portrait of Anastasia Voronkova",
+  },
+];
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <section class="page-hero about-hero">
-    <Container as="div" class="home-hero__inner">
-      <div class="page-intro">
-        <p class="eyebrow">Team</p>
-        <h1>A clear, human record of Colorado tech in motion.</h1>
-        <p>{positioningStatement}</p>
-        <p>
-          The {podcastName} team builds for people who want more than headlines. We sit with founders, operators, engineers,
-          investors, community builders, and emerging leaders to understand what they are building, what they have
-          learned, and how Colorado shapes the work.
-        </p>
-        <div class="home-hero__actions">
-          <a class="button-link button-link--primary" href="/episodes">Listen To Episodes</a>
-          <a class="button-link button-link--secondary" href="/suggest-a-guest">Suggest a guest</a>
-        </div>
-      </div>
-
-      <div class="home-hero__art" aria-hidden="true">
-        <div class="home-hero__art-inner">
-          <p class="home-hero__art-label">Colorado Lens</p>
-          <h2 class="home-hero__art-title">Local context. Practical lessons. Generous curiosity.</h2>
-        </div>
-      </div>
-    </Container>
-  </section>
-
-  <Container as="section" class="about-mission" aria-labelledby="about-mission-heading">
-    <div class="about-mission__grid">
-      <div class="about-mission__copy">
-        <p class="home-kicker">Mission</p>
-        <h2 id="about-mission-heading">Make Colorado’s technology community easier to understand and easier to join.</h2>
-      </div>
-      <div class="about-mission__body">
-        <p>
-          The show creates thoughtful, accessible conversations with the people building across Colorado: the decisions
-          behind the product, the company, the career pivot, the fund, the community program, and the hard-won lesson.
-        </p>
-        <p>
-          Each episode is designed to be useful before someone presses play and worth returning to after they listen.
-          The website complements the podcast with readable summaries, show notes, links, and transcripts when
-          available.
-        </p>
-      </div>
+  <Container as="section" class="team-intro" aria-labelledby="team-intro-heading">
+    <div class="editorial-panel editorial-panel--dark team-intro__panel">
+      <h1 id="team-intro-heading">Meet the Team Behind Colorado Tech People</h1>
     </div>
   </Container>
 
-  <Container as="section" class="about-values" aria-labelledby="about-audience-heading">
+  <Container as="section" class="team-section" aria-labelledby="team-heading">
     <div class="home-section-heading">
-      <div>
-        <p class="home-kicker">Audience</p>
-        <h2 id="about-audience-heading">For people building, hiring, investing, learning, and connecting here.</h2>
-      </div>
+      <h2 id="team-heading">Our Team</h2>
     </div>
-    <div class="about-values__grid">
-      <article class="info-card">
-        <p class="home-kicker">Builders</p>
-        <h3>Founders and teams</h3>
-        <p>Stories from people turning ideas into durable companies, products, services, and communities.</p>
-      </article>
-      <article class="info-card">
-        <p class="home-kicker">Operators</p>
-        <h3>Leaders and practitioners</h3>
-        <p>Practical context for product, engineering, go-to-market, people, finance, and growth work.</p>
-      </article>
-      <article class="info-card">
-        <p class="home-kicker">Community</p>
-        <h3>Talent and connectors</h3>
-        <p>A welcoming entry point for students, career changers, investors, mentors, and ecosystem partners.</p>
-      </article>
-    </div>
+
+    <ul class="team-grid">
+      {teamMembers.map((member) => (
+        <li>
+          <article class="team-card">
+            <img
+              class="team-card__image"
+              src={member.headshot.src}
+              width={member.headshot.width}
+              height={member.headshot.height}
+              alt={member.alt}
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="team-card__body">
+              <header class="team-card__header">
+                <h3>{member.name}</h3>
+                <p>{member.role}</p>
+              </header>
+              <p class="team-card__bio">{member.biography}</p>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ul>
   </Container>
 
-  <Container as="section" class="about-editorial" aria-labelledby="about-editorial-heading">
-    <div class="about-editorial__grid">
-      <article class="editorial-panel">
-        <p class="home-kicker">Editorial Point Of View</p>
-        <h2 id="about-editorial-heading">Curious, grounded, and allergic to empty hype.</h2>
-        <p>
-          We prioritize real decisions, useful context, and honest reflection. The best episodes feel like a sharp
-          coffee conversation with someone generous enough to explain what actually happened.
-        </p>
-        <ul class="about-list">
-          <li>Readable summaries over vague promotion.</li>
-          <li>Specific lessons over generic startup advice.</li>
-          <li>Human stories over polished talking points.</li>
-        </ul>
-      </article>
-
-      <article class="editorial-panel editorial-panel--dark">
-        <p class="home-kicker">Colorado Technology Ecosystem</p>
-        <h2>Rooted in place, not limited by it.</h2>
-        <p>
-          Colorado tech is not one scene or one city. It includes Front Range startups, enterprise teams, research labs,
-          civic technology, outdoor and climate innovation, rural entrepreneurship, and community groups helping people
-          find their first or next opportunity.
-        </p>
-        <p>
-          The show frames Colorado as a connected ecosystem: local enough to be personal, ambitious enough to matter
-          nationally, and varied enough to keep surprising us.
-        </p>
-      </article>
-    </div>
-  </Container>
-
-  <Container as="section" class="about-cta" aria-labelledby="about-cta-heading">
-    <div class="about-cta__panel">
-      <div>
-        <p class="home-kicker">Get Involved</p>
-        <h2 id="about-cta-heading">Have a story, guest idea, partnership, or question?</h2>
-        <p>
-          Start with the episodes, then tell us who should be part of the conversation next. We’re especially interested
-          in voices with a specific lesson, strong Colorado context, or a useful perspective for the community.
-        </p>
-      </div>
-      <nav class="about-cta__links" aria-label="Team page calls to action">
-        <a class="button-link button-link--primary" href="/episodes">Listen To Episodes</a>
-        <a class="button-link button-link--secondary" href="/suggest-a-guest">Suggest A Guest</a>
-        <a class="button-link button-link--secondary" href="/sponsor-the-show">Sponsor The Show</a>
-        <a class="button-link button-link--secondary" href="/contact">Contact Us</a>
-      </nav>
-    </div>
+  <Container as="section" class="team-cta" aria-label="Suggest a guest">
+    <a class="team-cta__link" href="/suggest-a-guest">Help Us Tell Colorado's Next Great Tech Story</a>
   </Container>
 </BaseLayout>
