@@ -41,6 +41,16 @@ const platformIconConfig = [
 const getPlatformIcon = (label: string) =>
   platformIconConfig.find((platform) => label.toLowerCase().includes(platform.match));
 
+const platformIconConfig = [
+  { match: "apple", icon: "apple", iconSrc: applePodcastsIcon.src },
+  { match: "spotify", icon: "spotify", iconSrc: spotifyIcon.src },
+  { match: "youtube", icon: "youtube", iconSrc: youtubeIcon.src },
+];
+
+const getPlatformIcon = (label: string) =>
+  platformIconConfig.find((platform) => label.toLowerCase().includes(platform.match));
+
+const fallbackPodcastName = "Colorado Tech People";
 const fallbackPositioningStatement =
   "An editorial podcast spotlighting the people, companies, and ideas shaping the Colorado tech ecosystem.";
 
