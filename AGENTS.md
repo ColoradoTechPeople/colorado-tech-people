@@ -37,7 +37,7 @@ Expected MVP routes:
 - `/`
 - `/episodes`
 - `/episodes/[slug]`
-- `/about`
+- `/team`
 - `/suggest-a-guest`
 - `/sponsor-the-show`
 - `/contact`

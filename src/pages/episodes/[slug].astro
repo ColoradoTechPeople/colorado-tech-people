@@ -6,20 +6,28 @@ import TopicChips from "@components/TopicChips.astro";
 import EpisodePlayerOrLinks from "@components/EpisodePlayerOrLinks.astro";
 import PortableTextContent from "@components/PortableTextContent.astro";
 import EpisodeCard from "@components/EpisodeCard.astro";
+import JsonLd from "@components/JsonLd.astro";
+import podcastLogo from "../../../assets/logo.png";
 import { sanityClient } from "@lib/sanity/client";
-import { allPublishedEpisodesQuery, episodeBySlugQuery } from "@lib/sanity/queries";
+import { fetchPublishedEpisodes } from "@lib/sanity/published-episodes.mjs";
+import { allPublishedEpisodesQuery, episodeBySlugQuery, siteSettingsQuery } from "@lib/sanity/queries";
 import { cleanString, getEpisodeImageAlt, getEpisodeImageUrl, hasPortableText } from "@lib/episodes";
 import type { EpisodeBase } from "@lib/episodes";
+import { firstMetadataText, getEpisodeCanonicalUrl, metadataPlainText } from "@lib/episode-seo.mjs";
+import { absoluteHttpUrl } from "@lib/json-ld.mjs";
+
+interface SiteSettings {
+  defaultOgImage?: { asset?: { url?: string } };
+}
+
+const siteUrl = "https://www.coloradotechpeople.com/";
 
 export async function getStaticPaths() {
-  if (!sanityClient) return [];
-  let episodes: EpisodeBase[] = [];
-
-  try {
-    episodes = await sanityClient.fetch<EpisodeBase[]>(allPublishedEpisodesQuery);
-  } catch {
-    return [];
-  }
+  const episodes = await fetchPublishedEpisodes({
+    client: sanityClient,
+    query: allPublishedEpisodesQuery,
+    production: import.meta.env.PROD,
+  }) as EpisodeBase[];
 
   return episodes
     .filter((episode) => episode.slug)
@@ -31,14 +39,23 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 let episode: EpisodeBase | null = null;
 let relatedEpisodes: EpisodeBase[] = [];
+let siteSettings: SiteSettings | null = null;
 
 if (sanityClient && slug) {
   try {
-    episode = await sanityClient.fetch<EpisodeBase | null>(episodeBySlugQuery, { slug });
-    relatedEpisodes = await sanityClient.fetch<EpisodeBase[]>(allPublishedEpisodesQuery);
+    [episode, relatedEpisodes] = await Promise.all([
+      sanityClient.fetch<EpisodeBase | null>(episodeBySlugQuery, { slug }),
+      sanityClient.fetch<EpisodeBase[]>(allPublishedEpisodesQuery),
+    ]);
   } catch {
     episode = null;
     relatedEpisodes = [];
+  }
+
+  try {
+    siteSettings = await sanityClient.fetch<SiteSettings | null>(siteSettingsQuery);
+  } catch {
+    siteSettings = null;
   }
 }
 
@@ -49,14 +66,24 @@ if (!episode) {
 const episodeTitle = cleanString(episode.title) || "Untitled Episode";
 const episodeSummary =
   cleanString(episode.summary) || cleanString(episode.excerpt) || "Episode details and listening options are coming soon.";
-const title = cleanString(episode.seoTitle) || `${episodeTitle} | Colorado Tech People`;
-const description =
-  cleanString(episode.seoDescription) ||
-  cleanString(episode.excerpt) ||
-  cleanString(episode.summary) ||
-  "Published episode details and listening options.";
+const explicitSeoTitle = metadataPlainText(episode.seoTitle);
+const title = explicitSeoTitle || metadataPlainText(episodeTitle);
+const description = firstMetadataText([
+  episode.seoDescription,
+  episode.excerpt,
+  episode.summary,
+]) || undefined;
+const canonicalUrl = getEpisodeCanonicalUrl({
+  canonicalUrl: episode.canonicalUrl,
+  slug: episode.slug || slug,
+  episodeLabel: episode.slug || episodeTitle,
+});
 const imageUrl = getEpisodeImageUrl(episode);
 const imageAlt = getEpisodeImageAlt(episode);
+const structuredDataImage =
+  absoluteHttpUrl(episode.episodeImage?.asset?.url) ||
+  absoluteHttpUrl(siteSettings?.defaultOgImage?.asset?.url) ||
+  new URL(podcastLogo.src, siteUrl).toString();
 const guestName = cleanString(episode.guestName);
 const guestTitle = cleanString(episode.guestTitle);
 const guestCompany = cleanString(episode.guestCompany);
@@ -68,14 +95,42 @@ const linksMentioned = (episode.linksMentioned || []).filter(
   (link): link is { label: string; url: string } => Boolean(cleanString(link?.label) && cleanString(link?.url)),
 );
 const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._id).slice(0, 3);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "PodcastEpisode",
+      "@id": `${canonicalUrl}#episode`,
+      url: canonicalUrl,
+      name: episodeTitle,
+      description: description || episodeSummary,
+      datePublished: episode.publishDate,
+      image: structuredDataImage,
+      inLanguage: "en-US",
+      partOfSeries: { "@id": `${siteUrl}#podcast` },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${canonicalUrl}#breadcrumb`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: "Episodes", item: `${siteUrl}episodes` },
+        { "@type": "ListItem", position: 3, name: episodeTitle, item: canonicalUrl },
+      ],
+    },
+  ],
+};
 ---
 
 <BaseLayout
   title={title}
   description={description}
-  canonicalUrl={cleanString(episode.canonicalUrl) || undefined}
+  canonicalUrl={canonicalUrl}
   ogImage={cleanString(episode.ogImage?.asset?.url) || cleanString(episode.episodeImage?.asset?.url) || undefined}
+  completeTitle={Boolean(explicitSeoTitle)}
+  ogType="article"
 >
+  <JsonLd data={structuredData} />
   <Container as="article" class="episode-detail">
     <p class="episode-detail__back-link"><a href="/episodes">Back to all episodes</a></p>
 

@@ -1,0 +1,14 @@
+---
+interface Props {
+  name?: string;
+}
+
+const { name = "bot-field" } = Astro.props;
+---
+
+<p class="form-honeypot" aria-hidden="true">
+  <label>
+    Do not fill out this field if you are human
+    <input name={name} type="text" tabindex="-1" autocomplete="off" />
+  </label>
+</p>

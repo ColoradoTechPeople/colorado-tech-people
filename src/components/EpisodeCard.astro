@@ -1,6 +1,6 @@
 ---
 import type { EpisodeBase } from "@lib/episodes";
-import { cleanString, getEpisodeImageAlt, getEpisodeImageUrl } from "@lib/episodes";
+import { cleanString, formatPublishDate, getEpisodeImageAlt, getEpisodeImageUrl } from "@lib/episodes";
 import EpisodeMetadata from "@components/EpisodeMetadata.astro";
 import TopicChips from "@components/TopicChips.astro";
 import applePodcastsIcon from "../../assets/platform-icons/apple-podcasts.png";
@@ -30,39 +30,64 @@ const guestCompany = cleanString(episode.guestCompany);
 const guestInfo = guestName && guestTitle && guestCompany ? `${guestName} · ${guestTitle}, ${guestCompany}` : "";
 const guestMeta = [guestTitle, guestCompany].filter(Boolean).join(", ");
 const hasGuestOverlay = Boolean(guestName || guestMeta);
+const mobileMeta = [formatPublishDate(episode.publishDate), guestName, guestTitle, guestCompany].filter(Boolean).join(" · ");
 const excerptId = `episode-excerpt-${episode._id.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
 ---
 
 <article class:list={["episode-card", featured && "episode-card--featured"]}>
-  {detailHref ? (
-    <a class="episode-card__image-link" href={detailHref} aria-label={`Open ${title}`}>
-      {episode.episodeNumber && <span class="episode-card__badge">Episode {episode.episodeNumber}</span>}
-      <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
-      {hasGuestOverlay && (
-        <span class="episode-card__guest-overlay">
-          {guestName && <span class="episode-card__guest-name">{guestName}</span>}
-          {guestMeta && <span class="episode-card__guest-meta">{guestMeta}</span>}
-        </span>
-      )}
-    </a>
-  ) : (
-    <div class="episode-card__image-frame">
-      <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
-      {hasGuestOverlay && (
-        <span class="episode-card__guest-overlay">
-          {guestName && <span class="episode-card__guest-name">{guestName}</span>}
-          {guestMeta && <span class="episode-card__guest-meta">{guestMeta}</span>}
-        </span>
-      )}
-    </div>
-  )}
+  <div class="episode-card__media">
+    {detailHref ? (
+      <a class="episode-card__image-link" href={detailHref} aria-label={`Open ${title}`}>
+        {episode.episodeNumber && <span class="episode-card__badge">Episode {episode.episodeNumber}</span>}
+        <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
+        {hasGuestOverlay && (
+          <span class="episode-card__guest-overlay">
+            {guestName && <span class="episode-card__guest-name">{guestName}</span>}
+            {guestMeta && <span class="episode-card__guest-meta">{guestMeta}</span>}
+          </span>
+        )}
+      </a>
+    ) : (
+      <div class="episode-card__image-frame">
+        <img class="episode-card__image" src={imageUrl} alt={imageAlt} loading="lazy" />
+        {hasGuestOverlay && (
+          <span class="episode-card__guest-overlay">
+            {guestName && <span class="episode-card__guest-name">{guestName}</span>}
+            {guestMeta && <span class="episode-card__guest-meta">{guestMeta}</span>}
+          </span>
+        )}
+      </div>
+    )}
+    {platformLinks.length > 0 && (
+      <div class="episode-card__platforms episode-card__platforms--mobile" aria-label="Listen on">
+        {platformLinks.map((link) => (
+          <a
+            class:list={["episode-card__platform-link", `episode-card__platform-link--${link.icon}`]}
+            href={link.href}
+            aria-label={`Listen to ${title} on ${link.label}`}
+          >
+            <img
+              class:list={["episode-card__platform-logo", `episode-card__platform-logo--${link.icon}`]}
+              src={link.iconSrc}
+              alt=""
+              loading="lazy"
+              aria-hidden="true"
+            />
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
   <div class="episode-card__body">
     {!featured && (
-      <EpisodeMetadata publishDate={episode.publishDate} />
+      <div class="episode-card__meta--desktop">
+        <EpisodeMetadata publishDate={episode.publishDate} />
+      </div>
     )}
     <h3>
       {detailHref ? <a href={detailHref}>{title}</a> : title}
     </h3>
+    {!featured && mobileMeta && <p class="episode-card__meta episode-card__meta--mobile">{mobileMeta}</p>}
     {featured && guestInfo && <p class="episode-card__guest-info">{guestInfo}</p>}
     <p id={excerptId} class="episode-card__excerpt" data-episode-excerpt>{excerpt}</p>
     <button

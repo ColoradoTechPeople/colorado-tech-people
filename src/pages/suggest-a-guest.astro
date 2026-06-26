@@ -1,10 +1,70 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import Container from "@components/Container.astro";
+import Form from "@components/forms/Form.astro";
+import FormActions from "@components/forms/FormActions.astro";
+import FormCheckbox from "@components/forms/FormCheckbox.astro";
+import FormField from "@components/forms/FormField.astro";
+import FormHidden from "@components/forms/FormHidden.astro";
+
+const pageTitle = "Suggest a Guest";
+const pageDescription = "Suggest a founder, operator, builder, or community voice for the Colorado Tech People podcast.";
 ---
 
-<BaseLayout title="Suggest a Guest | Colorado Tech People">
-  <section class="site-shell">
-    <h1>Suggest a Guest (Placeholder)</h1>
-    <p>Temporary Phase 1 scaffold for future guest inquiry form content.</p>
-  </section>
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <Container as="section" class="section-shell">
+    <div class="page-intro page-intro--narrow">
+      <p class="eyebrow">Guest Inquiry</p>
+      <h1>Suggest a guest</h1>
+      <p>
+        Know someone building something meaningful in Colorado tech? We’d love to hear about them. Colorado Tech
+        People features founders, product leaders, builders, and innovators whose stories deserve to be shared.
+      </p>
+      <p>
+        We’re especially interested in guests who can talk honestly about the hard decisions behind building great
+        products, how AI and technology are solving real problems, and what it takes to build and scale in Colorado.
+      </p>
+      <p>
+        The best guest suggestions often come from the community. Share their name, company, and why you think they’d
+        be a great fit for Colorado Tech People.
+      </p>
+    </div>
+
+    <Form name="guest-inquiry">
+      <FormHidden name="form_type" value="Guest Inquiry" />
+      <FormHidden name="source" value="suggest-a-guest" />
+      <FormField id="guest-your-name" name="name" label="Your name" autocomplete="name" required />
+      <FormField id="guest-email" name="email" label="Your email" type="email" autocomplete="email" required />
+      <FormField id="guest-name" name="suggested_guest_name" label="Suggested guest name" required />
+      <FormField
+        id="guest-title"
+        name="suggested_guest_title_company"
+        label="Suggested guest title/company"
+        required
+      />
+      <FormField
+        id="guest-url"
+        name="guest_website_or_linkedin"
+        label="Guest website or LinkedIn URL"
+        placeholder="https://"
+        required
+      />
+      <FormField
+        id="guest-fit"
+        name="why_good_fit"
+        label="Why this guest would be a good fit"
+        type="textarea"
+        required
+      />
+      <FormField id="guest-topic" name="suggested_topic" label="Suggested topic (optional)" />
+      <FormField id="guest-notes" name="additional_notes" label="Additional notes (optional)" type="textarea" />
+      <FormCheckbox
+        id="guest-consent"
+        name="contact_consent"
+        label="You may contact me about this guest suggestion."
+        required
+      />
+      <FormActions submitLabel="Send Guest Suggestion" note="Required fields are marked with an asterisk." />
+    </Form>
+  </Container>
 </BaseLayout>

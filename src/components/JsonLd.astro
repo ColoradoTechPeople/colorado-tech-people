@@ -1,0 +1,12 @@
+---
+import { serializeJsonLd } from "@lib/json-ld.mjs";
+
+interface Props {
+  data: Record<string, unknown>;
+}
+
+const { data } = Astro.props;
+const json = serializeJsonLd(data);
+---
+
+<script type="application/ld+json" set:html={json} is:inline></script>

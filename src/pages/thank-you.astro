@@ -1,10 +1,24 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
+import Container from "@components/Container.astro";
+import FormMessage from "@components/forms/FormMessage.astro";
+
+const pageTitle = "Thank You";
+const pageDescription = "Confirmation that Colorado Tech People received your submission.";
 ---
 
-<BaseLayout title="Thank You | Colorado Tech People">
-  <section class="site-shell">
-    <h1>Thank You (Placeholder)</h1>
-    <p>Temporary Phase 1 scaffold for post-submit success messaging.</p>
-  </section>
+<BaseLayout title={pageTitle} description={pageDescription} robots="noindex, follow">
+  <Container as="section" class="section-shell">
+    <div class="page-intro page-intro--narrow">
+      <p class="eyebrow">Submission Received</p>
+      <h1>Thank you</h1>
+      <FormMessage kind="success" title="Your message has been received.">
+        <p>We’ll review it and follow up if there’s a fit.</p>
+      </FormMessage>
+      <div class="home-hero__actions">
+        <a class="button-link button-link--primary" href="/episodes">Browse Episodes</a>
+        <a class="button-link button-link--secondary" href="/">Return Home</a>
+      </div>
+    </div>
+  </Container>
 </BaseLayout>
