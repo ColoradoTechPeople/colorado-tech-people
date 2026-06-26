@@ -136,19 +136,10 @@ const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._i
           <section class="episode-detail__sidebar-card" aria-labelledby="guest-heading">
             <h2 id="guest-heading">Guest</h2>
             {(guestName || guestMeta) && (
-              <p class="episode-detail__guest-meta">
-                {guestName && <strong>{guestName}</strong>}
-                {guestName && guestMeta ? ", " : ""}
-                {guestMeta}
-              </p>
+              <p class="episode-detail__guest-meta">{guestName && <strong>{guestName}</strong>}{guestMeta && <>{guestName ? ", " : ""}{guestMeta}</>}</p>
             )}
           </section>
         )}
-
-        <section class="episode-detail__summary-card" aria-labelledby="episode-summary-heading">
-          <h2 id="episode-summary-heading">Episode Summary</h2>
-          <p>{episodeSummary}</p>
-        </section>
 
         <section class="episode-detail__sidebar-card" aria-labelledby="subscribe-heading">
           <h2 id="subscribe-heading">Stay close to the show</h2>
@@ -162,7 +153,7 @@ const otherEpisodes = relatedEpisodes.filter((entry) => entry._id !== episode._i
       <section class="episode-detail__related" aria-labelledby="related-episodes-heading">
         <div class="home-section-heading">
           <div>
-            <p class="home-kicker">Related Episodes</p>
+            <p class="home-kicker">More Episodes</p>
             <h2 id="related-episodes-heading">Keep listening</h2>
           </div>
         </div>

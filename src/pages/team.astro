@@ -25,20 +25,20 @@ if (sanityClient) {
 
 const podcastName = siteSettings?.podcastName?.trim() || fallbackPodcastName;
 const positioningStatement = siteSettings?.positioningStatement?.trim() || fallbackPositioningStatement;
-const pageTitle = `About ${podcastName} | Colorado Tech People`;
+const pageTitle = `Team | ${podcastName}`;
 const pageDescription =
-  "Learn about the mission, audience, editorial point of view, and Colorado technology ecosystem lens behind Colorado Tech People.";
+  "Meet the team and editorial point of view behind Colorado Tech People, an editorial podcast focused on Colorado technology.";
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
   <section class="page-hero about-hero">
     <Container as="div" class="home-hero__inner">
       <div class="page-intro">
-        <p class="eyebrow">About The Show</p>
+        <p class="eyebrow">Team</p>
         <h1>A clear, human record of Colorado tech in motion.</h1>
         <p>{positioningStatement}</p>
         <p>
-          {podcastName} is built for people who want more than headlines. We sit with founders, operators, engineers,
+          The {podcastName} team builds for people who want more than headlines. We sit with founders, operators, engineers,
           investors, community builders, and emerging leaders to understand what they are building, what they have
           learned, and how Colorado shapes the work.
         </p>
@@ -145,7 +145,7 @@ const pageDescription =
           in voices with a specific lesson, strong Colorado context, or a useful perspective for the community.
         </p>
       </div>
-      <nav class="about-cta__links" aria-label="About page calls to action">
+      <nav class="about-cta__links" aria-label="Team page calls to action">
         <a class="button-link button-link--primary" href="/episodes">Listen To Episodes</a>
         <a class="button-link button-link--secondary" href="/suggest-a-guest">Suggest A Guest</a>
         <a class="button-link button-link--secondary" href="/sponsor-the-show">Sponsor The Show</a>

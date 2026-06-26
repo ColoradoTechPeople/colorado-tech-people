@@ -121,7 +121,6 @@ h6 {
 
 p {
   margin: 0 0 var(--space-4);
-  max-width: 70ch;
   color: var(--color-text-muted);
   line-height: var(--line-height-relaxed);
 }
@@ -715,6 +714,10 @@ textarea {
   padding-block: var(--space-7);
 }
 
+.privacy-section .page-intro--narrow {
+  width: 100%;
+}
+
 .episode-grid {
   display: grid;
   gap: var(--space-5);
@@ -1014,6 +1017,10 @@ textarea {
   gap: var(--space-5);
 }
 
+.home-editorial-panels__grid > :only-child {
+  grid-column: 1 / -1;
+}
+
 .editorial-panel,
 .info-card,
 .privacy-card {
@@ -1035,6 +1042,14 @@ textarea {
 .editorial-panel--dark p,
 .editorial-panel--dark li {
   color: #fff;
+}
+
+.home-editorial-panels .editorial-panel--dark h2,
+.home-editorial-panels .editorial-panel--dark p {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .about-list {
@@ -1110,13 +1125,18 @@ textarea {
 .home-subscribe-band__links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  align-items: center;
+  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.home-subscribe-band__links a {
+.home-subscribe-band__link {
+  text-decoration: none;
+}
+
+.home-subscribe-band__link:not(.episode-card__platform-link) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1129,7 +1149,7 @@ textarea {
   text-decoration: none;
 }
 
-.home-subscribe-band__links a:hover {
+.home-subscribe-band__link:not(.episode-card__platform-link):hover {
   background: var(--color-primary);
   color: #fff;
 }
@@ -1147,27 +1167,6 @@ textarea {
 .episode-player {
   display: grid;
   gap: var(--space-4);
-}
-
-.episode-player__embed {
-  overflow: hidden;
-  border-radius: var(--radius-md);
-}
-
-.episode-player__embed iframe {
-  width: 100%;
-  min-height: 11rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: #fff;
-}
-
-.episode-player__fallback {
-  margin: 0;
-  padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-muted);
 }
 
 .episode-player__links {
@@ -1214,7 +1213,6 @@ textarea {
   font-size: var(--font-size-300);
 }
 
-.episode-detail__summary-card,
 .episode-detail__text-card,
 .episode-detail__sidebar-card {
   padding: var(--space-5);
@@ -1231,15 +1229,8 @@ textarea {
   box-shadow: var(--shadow-lg);
 }
 
-.episode-detail__player-card h2,
-.episode-detail__player-card p,
-.episode-detail__player-card .episode-player__fallback {
+.episode-detail__player-card h2 {
   color: #fff;
-}
-
-.episode-detail__player-card .episode-player__fallback {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .episode-detail__player-card .episode-card__platform-link {
@@ -1320,7 +1311,6 @@ textarea {
 }
 
 .episode-detail__sidebar-card p:last-child,
-.episode-detail__summary-card p:last-child,
 .episode-detail__text-card p:last-child,
 .editorial-panel p:last-child,
 .info-card p:last-child,
